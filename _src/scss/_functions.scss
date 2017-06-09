@@ -1,0 +1,32 @@
+
+
+/* spacing
+----------------------------------------------------------------------------------------------------------------------*/
+@function spacing($multiplier: 1){
+	$spacing-base : 32px !default;
+	@return round($spacing-base * $multiplier);
+}
+
+/* z-indexes
+----------------------------------------------------------------------------------------------------------------------*/
+@function z-index($key){
+	$depth : (
+		behind: -1,
+		base  : 0,
+		normal: 1,
+		modalbg: 8,
+		modal: 9,
+		intro: 10,
+		footer: 200,
+		galaxy: 300,
+		header: 500,
+		loader: 2000,
+	) !default;
+
+	@return map-get($depth, $key);
+}
+
+// alias to z-index
+@function z($key){
+	@return z-index($key);
+}
