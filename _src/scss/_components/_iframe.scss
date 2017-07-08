@@ -3,7 +3,66 @@
 	float:left;
 	width:100%;
 	clear:both;
+	&.black {
+		background-color:darken(navy, 20%);
+		box-shadow:0 0 20px $black;
+		> div {
+			color:$white;
+			@media (min-width: $screen-lg-min) {
+				color:$black;
+				background-color:rgba($white,0.9);
+			}
+		}
+	}
+
+	&.absolute-container {
+
+		@media (min-width: $screen-lg-min) {
+			padding-bottom:33%;
+		}
+		> div {
+			position:relative;
+			float:left;
+			width:100%;
+
+			height:auto;
+			padding:6rem;
+			text-align:center;
+			@media (min-width: $screen-lg-min) {
+				position:absolute;
+				width:900px;
+				top:0;
+				left:calc(50% - 450px);
+				border-bottom-right-radius:1rem;
+				border-bottom-left-radius:1rem;
+				box-shadow:2px 5px 15px rgba($black,0.3);
+			}
+			h2 {
+				font-size:24px;
+				margin-bottom:2rem;
+			}
+
+			p {
+				font-size:24px;
+				line-height:2;
+				font-family:$font-family-serif;
+			}
+
+			// &:after {
+			// 	content:'';
+			// 	position:absolute;
+			// 	bottom:-10px;
+			// 	height:1px;
+			// 	background-color:$white;
+			// 	width:75%;
+			// 	left:12.5%;
+			// 	z-index:1;
+			// }
+		}
+	}
+
 }
+
 
 .iframe-container {
 	display:table;
