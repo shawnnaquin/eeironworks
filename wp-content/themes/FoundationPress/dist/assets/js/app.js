@@ -3554,260 +3554,6 @@ exports.DropdownMenu = DropdownMenu;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Positionable = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _foundationUtil = __webpack_require__(7);
-
-var _foundation = __webpack_require__(2);
-
-var _foundationUtil2 = __webpack_require__(1);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var POSITIONS = ['left', 'right', 'top', 'bottom'];
-var VERTICAL_ALIGNMENTS = ['top', 'bottom', 'center'];
-var HORIZONTAL_ALIGNMENTS = ['left', 'right', 'center'];
-
-var ALIGNMENTS = {
-  'left': VERTICAL_ALIGNMENTS,
-  'right': VERTICAL_ALIGNMENTS,
-  'top': HORIZONTAL_ALIGNMENTS,
-  'bottom': HORIZONTAL_ALIGNMENTS
-};
-
-function nextItem(item, array) {
-  var currentIdx = array.indexOf(item);
-  if (currentIdx === array.length - 1) {
-    return array[0];
-  } else {
-    return array[currentIdx + 1];
-  }
-}
-
-var Positionable = function (_Plugin) {
-  _inherits(Positionable, _Plugin);
-
-  function Positionable() {
-    _classCallCheck(this, Positionable);
-
-    return _possibleConstructorReturn(this, (Positionable.__proto__ || Object.getPrototypeOf(Positionable)).apply(this, arguments));
-  }
-
-  _createClass(Positionable, [{
-    key: '_init',
-
-    /**
-     * Abstract class encapsulating the tether-like explicit positioning logic
-     * including repositioning based on overlap.
-     * Expects classes to define defaults for vOffset, hOffset, position,
-     * alignment, allowOverlap, and allowBottomOverlap. They can do this by
-     * extending the defaults, or (for now recommended due to the way docs are
-     * generated) by explicitly declaring them.
-     *
-     **/
-
-    value: function _init() {
-      this.triedPositions = {};
-      this.position = this.options.position === 'auto' ? this._getDefaultPosition() : this.options.position;
-      this.alignment = this.options.alignment === 'auto' ? this._getDefaultAlignment() : this.options.alignment;
-    }
-  }, {
-    key: '_getDefaultPosition',
-    value: function _getDefaultPosition() {
-      return 'bottom';
-    }
-  }, {
-    key: '_getDefaultAlignment',
-    value: function _getDefaultAlignment() {
-      switch (this.position) {
-        case 'bottom':
-        case 'top':
-          return (0, _foundationUtil2.rtl)() ? 'right' : 'left';
-        case 'left':
-        case 'right':
-          return 'bottom';
-      }
-    }
-
-    /**
-     * Adjusts the positionable possible positions by iterating through alignments
-     * and positions.
-     * @function
-     * @private
-     */
-
-  }, {
-    key: '_reposition',
-    value: function _reposition() {
-      if (this._alignmentsExhausted(this.position)) {
-        this.position = nextItem(this.position, POSITIONS);
-        this.alignment = ALIGNMENTS[this.position][0];
-      } else {
-        this._realign();
-      }
-    }
-
-    /**
-     * Adjusts the dropdown pane possible positions by iterating through alignments
-     * on the current position.
-     * @function
-     * @private
-     */
-
-  }, {
-    key: '_realign',
-    value: function _realign() {
-      this._addTriedPosition(this.position, this.alignment);
-      this.alignment = nextItem(this.alignment, ALIGNMENTS[this.position]);
-    }
-  }, {
-    key: '_addTriedPosition',
-    value: function _addTriedPosition(position, alignment) {
-      this.triedPositions[position] = this.triedPositions[position] || [];
-      this.triedPositions[position].push(alignment);
-    }
-  }, {
-    key: '_positionsExhausted',
-    value: function _positionsExhausted() {
-      var isExhausted = true;
-      for (var i = 0; i < POSITIONS.length; i++) {
-        isExhausted = isExhausted && this._alignmentsExhausted(POSITIONS[i]);
-      }
-      return isExhausted;
-    }
-  }, {
-    key: '_alignmentsExhausted',
-    value: function _alignmentsExhausted(position) {
-      return this.triedPositions[position] && this.triedPositions[position].length == ALIGNMENTS[position].length;
-    }
-
-    // When we're trying to center, we don't want to apply offset that's going to
-    // take us just off center, so wrap around to return 0 for the appropriate
-    // offset in those alignments.  TODO: Figure out if we want to make this
-    // configurable behavior... it feels more intuitive, especially for tooltips, but
-    // it's possible someone might actually want to start from center and then nudge
-    // slightly off.
-
-  }, {
-    key: '_getVOffset',
-    value: function _getVOffset() {
-      return this.options.vOffset;
-    }
-  }, {
-    key: '_getHOffset',
-    value: function _getHOffset() {
-      return this.options.hOffset;
-    }
-  }, {
-    key: '_setPosition',
-    value: function _setPosition($anchor, $element, $parent) {
-      if ($anchor.attr('aria-expanded') === 'false') {
-        return false;
-      }
-      var $eleDims = _foundationUtil.Box.GetDimensions($element),
-          $anchorDims = _foundationUtil.Box.GetDimensions($anchor);
-
-      $element.offset(_foundationUtil.Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
-
-      if (!this.options.allowOverlap) {
-        var overlaps = {};
-        var minOverlap = 100000000;
-        // default coordinates to how we start, in case we can't figure out better
-        var minCoordinates = { position: this.position, alignment: this.alignment };
-        while (!this._positionsExhausted()) {
-          var overlap = _foundationUtil.Box.OverlapArea($element, $parent, false, false, this.options.allowBottomOverlap);
-          if (overlap === 0) {
-            return;
-          }
-
-          if (overlap < minOverlap) {
-            minOverlap = overlap;
-            minCoordinates = { position: this.position, alignment: this.alignment };
-          }
-
-          this._reposition();
-
-          $element.offset(_foundationUtil.Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
-        }
-        // If we get through the entire loop, there was no non-overlapping
-        // position available. Pick the version with least overlap.
-        this.position = minCoordinates.position;
-        this.alignment = minCoordinates.alignment;
-        $element.offset(_foundationUtil.Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
-      }
-    }
-  }]);
-
-  return Positionable;
-}(_foundation.Plugin);
-
-Positionable.defaults = {
-  /**
-   * Position of positionable relative to anchor. Can be left, right, bottom, top, or auto.
-   * @option
-   * @type {string}
-   * @default 'auto'
-   */
-  position: 'auto',
-  /**
-   * Alignment of positionable relative to anchor. Can be left, right, bottom, top, center, or auto.
-   * @option
-   * @type {string}
-   * @default 'auto'
-   */
-  alignment: 'auto',
-  /**
-   * Allow overlap of container/window. If false, dropdown positionable first
-   * try to position as defined by data-position and data-alignment, but
-   * reposition if it would cause an overflow.
-   * @option
-   * @type {boolean}
-   * @default false
-   */
-  allowOverlap: false,
-  /**
-   * Allow overlap of only the bottom of the container. This is the most common
-   * behavior for dropdowns, allowing the dropdown to extend the bottom of the
-   * screen but not otherwise influence or break out of the container.
-   * @option
-   * @type {boolean}
-   * @default true
-   */
-  allowBottomOverlap: true,
-  /**
-   * Number of pixels the positionable should be separated vertically from anchor
-   * @option
-   * @type {number}
-   * @default 0
-   */
-  vOffset: 0,
-  /**
-   * Number of pixels the positionable should be separated horizontally from anchor
-   * @option
-   * @type {number}
-   * @default 0
-   */
-  hOffset: 0
-};
-
-exports.Positionable = Positionable;
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.SmoothScroll = undefined;
@@ -3984,7 +3730,7 @@ SmoothScroll.defaults = {
 exports.SmoothScroll = SmoothScroll;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4538,7 +4284,7 @@ Tabs.defaults = {
 exports.Tabs = Tabs;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4604,299 +4350,7 @@ function Timer(elem, options, cb) {
 exports.Timer = Timer;
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _whatInput = __webpack_require__(39);
-
-var _whatInput2 = _interopRequireDefault(_whatInput);
-
-var _webfontloader = __webpack_require__(37);
-
-var _webfontloader2 = _interopRequireDefault(_webfontloader);
-
-var _foundationSites = __webpack_require__(20);
-
-var _foundationSites2 = _interopRequireDefault(_foundationSites);
-
-__webpack_require__(40);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_webfontloader2.default.load({
-	google: {
-		families: ['Droid Sans', 'Droid Serif', 'Droid Serif:italic', 'Bree Serif']
-	}
-});
-
-window.$ = _jquery2.default;
-// If you want to pick and choose which modules to include, comment out the above and uncomment
-// the line below
-//import './lib/foundation-explicit-pieces';
-
-(0, _jquery2.default)(document).foundation();
-
-var data = {
-	$window: (0, _jquery2.default)(window),
-	$body: (0, _jquery2.default)('body'),
-	loadedClass: 'is-loaded',
-	offClass: 'is-off',
-	scrolled: {
-		status: false,
-		$el: (0, _jquery2.default)('body'),
-		class: 'is-scrolled',
-		threshold: 200,
-		get state() {
-			return this.status;
-		},
-		set state(state) {
-
-			var h = this.$el.hasClass(this.class);
-			var s = this.status;
-			var t = this.threshold;
-			if (s < t && state >= t && !h) {
-				this.$el.addClass(this.class);
-			} else if (s >= t && state < t && h) {
-				this.$el.removeClass(this.class);
-			}
-
-			this.status = state;
-		}
-	},
-	$spinner: null
-};
-
-var Header = {
-
-	data: {
-
-		$iFrame: (0, _jquery2.default)('.js-iframe'),
-		$spinner: (0, _jquery2.default)('.js-spinner'),
-		scroll: function scroll() {
-			modules.header.scroll();
-		}
-	},
-
-	loadIframe: function loadIframe() {
-		var _this = this;
-
-		this.data.$iFrame.on('load', function () {
-
-			data.$body.addClass(data.loadedClass);
-			data.$spinner = _this.data.$spinner.clone();
-			_this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', function () {
-				_this.data.$spinner.remove();
-			});
-		});
-	},
-	scroll: function scroll() {
-		data.scrolled.state = data.$window.scrollTop();
-	},
-	init: function init() {
-
-		this.loadIframe();
-		this.scroll();
-		(0, _jquery2.default)(window).on('scroll', this.data.scroll);
-	}
-};
-
-var modules = {
-	header: Header
-};
-
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
-
-try {
-	for (var _iterator = Object.entries(modules)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-		var _step$value = _slicedToArray(_step.value, 2),
-		    key = _step$value[0],
-		    module = _step$value[1];
-
-		module.init();
-	}
-} catch (err) {
-	_didIteratorError = true;
-	_iteratorError = err;
-} finally {
-	try {
-		if (!_iteratorNormalCompletion && _iterator.return) {
-			_iterator.return();
-		}
-	} finally {
-		if (_didIteratorError) {
-			throw _iteratorError;
-		}
-	}
-}
-
-window.App = modules;
-window.App.Data = data;
-
-// return modules;
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _foundation = __webpack_require__(22);
-
-var _foundationUtil = __webpack_require__(1);
-
-var _foundationUtil2 = __webpack_require__(7);
-
-var _foundationUtil3 = __webpack_require__(8);
-
-var _foundationUtil4 = __webpack_require__(3);
-
-var _foundationUtil5 = __webpack_require__(4);
-
-var _foundationUtil6 = __webpack_require__(6);
-
-var _foundationUtil7 = __webpack_require__(9);
-
-var _foundationUtil8 = __webpack_require__(18);
-
-var _foundationUtil9 = __webpack_require__(10);
-
-var _foundationUtil10 = __webpack_require__(5);
-
-var _foundation2 = __webpack_require__(21);
-
-var _foundation3 = __webpack_require__(11);
-
-var _foundation4 = __webpack_require__(12);
-
-var _foundation5 = __webpack_require__(13);
-
-var _foundation6 = __webpack_require__(23);
-
-var _foundation7 = __webpack_require__(14);
-
-var _foundation8 = __webpack_require__(24);
-
-var _foundation9 = __webpack_require__(25);
-
-var _foundation10 = __webpack_require__(26);
-
-var _foundation11 = __webpack_require__(27);
-
-var _foundation12 = __webpack_require__(28);
-
-var _foundation13 = __webpack_require__(30);
-
-var _foundation14 = __webpack_require__(31);
-
-var _foundation15 = __webpack_require__(32);
-
-var _foundation16 = __webpack_require__(33);
-
-var _foundation17 = __webpack_require__(16);
-
-var _foundation18 = __webpack_require__(34);
-
-var _foundation19 = __webpack_require__(17);
-
-var _foundation20 = __webpack_require__(35);
-
-var _foundation21 = __webpack_require__(36);
-
-var _foundation22 = __webpack_require__(29);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_foundation.Foundation.addToJquery(_jquery2.default);
-
-// Add Foundation Utils to Foundation global namespace for backwards
-// compatibility.
-
-_foundation.Foundation.rtl = _foundationUtil.rtl;
-_foundation.Foundation.GetYoDigits = _foundationUtil.GetYoDigits;
-_foundation.Foundation.transitionend = _foundationUtil.transitionend;
-
-_foundation.Foundation.Box = _foundationUtil2.Box;
-_foundation.Foundation.onImagesLoaded = _foundationUtil3.onImagesLoaded;
-_foundation.Foundation.Keyboard = _foundationUtil4.Keyboard;
-_foundation.Foundation.MediaQuery = _foundationUtil5.MediaQuery;
-_foundation.Foundation.Motion = _foundationUtil6.Motion;
-_foundation.Foundation.Move = _foundationUtil6.Move;
-_foundation.Foundation.Nest = _foundationUtil7.Nest;
-_foundation.Foundation.Timer = _foundationUtil8.Timer;
-
-// Touch and Triggers previously were almost purely sede effect driven,
-// so n../../js// need to add it to Foundation, just init them.
-
-_foundationUtil9.Touch.init(_jquery2.default);
-
-_foundationUtil10.Triggers.init(_jquery2.default, _foundation.Foundation);
-
-_foundation.Foundation.plugin(_foundation2.Abide, 'Abide');
-
-_foundation.Foundation.plugin(_foundation3.Accordion, 'Accordion');
-
-_foundation.Foundation.plugin(_foundation4.AccordionMenu, 'AccordionMenu');
-
-_foundation.Foundation.plugin(_foundation5.Drilldown, 'Drilldown');
-
-_foundation.Foundation.plugin(_foundation6.Dropdown, 'Dropdown');
-
-_foundation.Foundation.plugin(_foundation7.DropdownMenu, 'DropdownMenu');
-
-_foundation.Foundation.plugin(_foundation8.Equalizer, 'Equalizer');
-
-_foundation.Foundation.plugin(_foundation9.Interchange, 'Interchange');
-
-_foundation.Foundation.plugin(_foundation10.Magellan, 'Magellan');
-
-_foundation.Foundation.plugin(_foundation11.OffCanvas, 'OffCanvas');
-
-_foundation.Foundation.plugin(_foundation12.Orbit, 'Orbit');
-
-_foundation.Foundation.plugin(_foundation13.ResponsiveMenu, 'ResponsiveMenu');
-
-_foundation.Foundation.plugin(_foundation14.ResponsiveToggle, 'ResponsiveToggle');
-
-_foundation.Foundation.plugin(_foundation15.Reveal, 'Reveal');
-
-_foundation.Foundation.plugin(_foundation16.Slider, 'Slider');
-
-_foundation.Foundation.plugin(_foundation17.SmoothScroll, 'SmoothScroll');
-
-_foundation.Foundation.plugin(_foundation18.Sticky, 'Sticky');
-
-_foundation.Foundation.plugin(_foundation19.Tabs, 'Tabs');
-
-_foundation.Foundation.plugin(_foundation20.Toggler, 'Toggler');
-
-_foundation.Foundation.plugin(_foundation21.Tooltip, 'Tooltip');
-
-_foundation.Foundation.plugin(_foundation22.ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
-
-exports.default = _foundation.Foundation;
-
-/***/ }),
-/* 21 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5566,7 +5020,7 @@ Abide.defaults = {
 exports.Abide = Abide;
 
 /***/ }),
-/* 22 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5931,7 +5385,7 @@ function hyphenate(str) {
 exports.Foundation = Foundation;
 
 /***/ }),
-/* 23 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5954,7 +5408,7 @@ var _foundationUtil = __webpack_require__(3);
 
 var _foundationUtil2 = __webpack_require__(1);
 
-var _foundation = __webpack_require__(15);
+var _foundation = __webpack_require__(26);
 
 var _foundationUtil3 = __webpack_require__(5);
 
@@ -6384,7 +5838,7 @@ Dropdown.defaults = {
 exports.Dropdown = Dropdown;
 
 /***/ }),
-/* 24 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6791,7 +6245,7 @@ Equalizer.defaults = {
 exports.Equalizer = Equalizer;
 
 /***/ }),
-/* 25 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7063,7 +6517,7 @@ Interchange.SPECIAL_QUERIES = {
 exports.Interchange = Interchange;
 
 /***/ }),
-/* 26 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7084,7 +6538,7 @@ var _foundationUtil = __webpack_require__(1);
 
 var _foundation = __webpack_require__(2);
 
-var _foundation2 = __webpack_require__(16);
+var _foundation2 = __webpack_require__(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7385,7 +6839,7 @@ Magellan.defaults = {
 exports.Magellan = Magellan;
 
 /***/ }),
-/* 27 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8013,7 +7467,7 @@ OffCanvas.defaults = {
 exports.OffCanvas = OffCanvas;
 
 /***/ }),
-/* 28 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8034,7 +7488,7 @@ var _foundationUtil = __webpack_require__(3);
 
 var _foundationUtil2 = __webpack_require__(6);
 
-var _foundationUtil3 = __webpack_require__(18);
+var _foundationUtil3 = __webpack_require__(17);
 
 var _foundationUtil4 = __webpack_require__(8);
 
@@ -8621,7 +8075,261 @@ Orbit.defaults = {
 exports.Orbit = Orbit;
 
 /***/ }),
-/* 29 */
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Positionable = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _foundationUtil = __webpack_require__(7);
+
+var _foundation = __webpack_require__(2);
+
+var _foundationUtil2 = __webpack_require__(1);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var POSITIONS = ['left', 'right', 'top', 'bottom'];
+var VERTICAL_ALIGNMENTS = ['top', 'bottom', 'center'];
+var HORIZONTAL_ALIGNMENTS = ['left', 'right', 'center'];
+
+var ALIGNMENTS = {
+  'left': VERTICAL_ALIGNMENTS,
+  'right': VERTICAL_ALIGNMENTS,
+  'top': HORIZONTAL_ALIGNMENTS,
+  'bottom': HORIZONTAL_ALIGNMENTS
+};
+
+function nextItem(item, array) {
+  var currentIdx = array.indexOf(item);
+  if (currentIdx === array.length - 1) {
+    return array[0];
+  } else {
+    return array[currentIdx + 1];
+  }
+}
+
+var Positionable = function (_Plugin) {
+  _inherits(Positionable, _Plugin);
+
+  function Positionable() {
+    _classCallCheck(this, Positionable);
+
+    return _possibleConstructorReturn(this, (Positionable.__proto__ || Object.getPrototypeOf(Positionable)).apply(this, arguments));
+  }
+
+  _createClass(Positionable, [{
+    key: '_init',
+
+    /**
+     * Abstract class encapsulating the tether-like explicit positioning logic
+     * including repositioning based on overlap.
+     * Expects classes to define defaults for vOffset, hOffset, position,
+     * alignment, allowOverlap, and allowBottomOverlap. They can do this by
+     * extending the defaults, or (for now recommended due to the way docs are
+     * generated) by explicitly declaring them.
+     *
+     **/
+
+    value: function _init() {
+      this.triedPositions = {};
+      this.position = this.options.position === 'auto' ? this._getDefaultPosition() : this.options.position;
+      this.alignment = this.options.alignment === 'auto' ? this._getDefaultAlignment() : this.options.alignment;
+    }
+  }, {
+    key: '_getDefaultPosition',
+    value: function _getDefaultPosition() {
+      return 'bottom';
+    }
+  }, {
+    key: '_getDefaultAlignment',
+    value: function _getDefaultAlignment() {
+      switch (this.position) {
+        case 'bottom':
+        case 'top':
+          return (0, _foundationUtil2.rtl)() ? 'right' : 'left';
+        case 'left':
+        case 'right':
+          return 'bottom';
+      }
+    }
+
+    /**
+     * Adjusts the positionable possible positions by iterating through alignments
+     * and positions.
+     * @function
+     * @private
+     */
+
+  }, {
+    key: '_reposition',
+    value: function _reposition() {
+      if (this._alignmentsExhausted(this.position)) {
+        this.position = nextItem(this.position, POSITIONS);
+        this.alignment = ALIGNMENTS[this.position][0];
+      } else {
+        this._realign();
+      }
+    }
+
+    /**
+     * Adjusts the dropdown pane possible positions by iterating through alignments
+     * on the current position.
+     * @function
+     * @private
+     */
+
+  }, {
+    key: '_realign',
+    value: function _realign() {
+      this._addTriedPosition(this.position, this.alignment);
+      this.alignment = nextItem(this.alignment, ALIGNMENTS[this.position]);
+    }
+  }, {
+    key: '_addTriedPosition',
+    value: function _addTriedPosition(position, alignment) {
+      this.triedPositions[position] = this.triedPositions[position] || [];
+      this.triedPositions[position].push(alignment);
+    }
+  }, {
+    key: '_positionsExhausted',
+    value: function _positionsExhausted() {
+      var isExhausted = true;
+      for (var i = 0; i < POSITIONS.length; i++) {
+        isExhausted = isExhausted && this._alignmentsExhausted(POSITIONS[i]);
+      }
+      return isExhausted;
+    }
+  }, {
+    key: '_alignmentsExhausted',
+    value: function _alignmentsExhausted(position) {
+      return this.triedPositions[position] && this.triedPositions[position].length == ALIGNMENTS[position].length;
+    }
+
+    // When we're trying to center, we don't want to apply offset that's going to
+    // take us just off center, so wrap around to return 0 for the appropriate
+    // offset in those alignments.  TODO: Figure out if we want to make this
+    // configurable behavior... it feels more intuitive, especially for tooltips, but
+    // it's possible someone might actually want to start from center and then nudge
+    // slightly off.
+
+  }, {
+    key: '_getVOffset',
+    value: function _getVOffset() {
+      return this.options.vOffset;
+    }
+  }, {
+    key: '_getHOffset',
+    value: function _getHOffset() {
+      return this.options.hOffset;
+    }
+  }, {
+    key: '_setPosition',
+    value: function _setPosition($anchor, $element, $parent) {
+      if ($anchor.attr('aria-expanded') === 'false') {
+        return false;
+      }
+      var $eleDims = _foundationUtil.Box.GetDimensions($element),
+          $anchorDims = _foundationUtil.Box.GetDimensions($anchor);
+
+      $element.offset(_foundationUtil.Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
+
+      if (!this.options.allowOverlap) {
+        var overlaps = {};
+        var minOverlap = 100000000;
+        // default coordinates to how we start, in case we can't figure out better
+        var minCoordinates = { position: this.position, alignment: this.alignment };
+        while (!this._positionsExhausted()) {
+          var overlap = _foundationUtil.Box.OverlapArea($element, $parent, false, false, this.options.allowBottomOverlap);
+          if (overlap === 0) {
+            return;
+          }
+
+          if (overlap < minOverlap) {
+            minOverlap = overlap;
+            minCoordinates = { position: this.position, alignment: this.alignment };
+          }
+
+          this._reposition();
+
+          $element.offset(_foundationUtil.Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
+        }
+        // If we get through the entire loop, there was no non-overlapping
+        // position available. Pick the version with least overlap.
+        this.position = minCoordinates.position;
+        this.alignment = minCoordinates.alignment;
+        $element.offset(_foundationUtil.Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
+      }
+    }
+  }]);
+
+  return Positionable;
+}(_foundation.Plugin);
+
+Positionable.defaults = {
+  /**
+   * Position of positionable relative to anchor. Can be left, right, bottom, top, or auto.
+   * @option
+   * @type {string}
+   * @default 'auto'
+   */
+  position: 'auto',
+  /**
+   * Alignment of positionable relative to anchor. Can be left, right, bottom, top, center, or auto.
+   * @option
+   * @type {string}
+   * @default 'auto'
+   */
+  alignment: 'auto',
+  /**
+   * Allow overlap of container/window. If false, dropdown positionable first
+   * try to position as defined by data-position and data-alignment, but
+   * reposition if it would cause an overflow.
+   * @option
+   * @type {boolean}
+   * @default false
+   */
+  allowOverlap: false,
+  /**
+   * Allow overlap of only the bottom of the container. This is the most common
+   * behavior for dropdowns, allowing the dropdown to extend the bottom of the
+   * screen but not otherwise influence or break out of the container.
+   * @option
+   * @type {boolean}
+   * @default true
+   */
+  allowBottomOverlap: true,
+  /**
+   * Number of pixels the positionable should be separated vertically from anchor
+   * @option
+   * @type {number}
+   * @default 0
+   */
+  vOffset: 0,
+  /**
+   * Number of pixels the positionable should be separated horizontally from anchor
+   * @option
+   * @type {number}
+   * @default 0
+   */
+  hOffset: 0
+};
+
+exports.Positionable = Positionable;
+
+/***/ }),
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8646,7 +8354,7 @@ var _foundation = __webpack_require__(2);
 
 var _foundation2 = __webpack_require__(11);
 
-var _foundation3 = __webpack_require__(17);
+var _foundation3 = __webpack_require__(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8917,7 +8625,7 @@ ResponsiveAccordionTabs.defaults = {};
 exports.ResponsiveAccordionTabs = ResponsiveAccordionTabs;
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9126,7 +8834,7 @@ ResponsiveMenu.defaults = {};
 exports.ResponsiveMenu = ResponsiveMenu;
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9334,7 +9042,7 @@ ResponsiveToggle.defaults = {
 exports.ResponsiveToggle = ResponsiveToggle;
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9984,7 +9692,7 @@ function mobileSniff() {
 exports.Reveal = Reveal;
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10794,7 +10502,7 @@ function baseLog(base, value) {
 exports.Slider = Slider;
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11380,7 +11088,7 @@ function emCalc(em) {
 exports.Sticky = Sticky;
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11582,7 +11290,7 @@ Toggler.defaults = {
 exports.Toggler = Toggler;
 
 /***/ }),
-/* 36 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11607,7 +11315,7 @@ var _foundationUtil2 = __webpack_require__(4);
 
 var _foundationUtil3 = __webpack_require__(5);
 
-var _foundation = __webpack_require__(15);
+var _foundation = __webpack_require__(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12098,6 +11806,299 @@ Tooltip.defaults = {
  */
 
 exports.Tooltip = Tooltip;
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _whatInput = __webpack_require__(39);
+
+var _whatInput2 = _interopRequireDefault(_whatInput);
+
+var _webfontloader = __webpack_require__(37);
+
+var _webfontloader2 = _interopRequireDefault(_webfontloader);
+
+var _foundationSites = __webpack_require__(36);
+
+var _foundationSites2 = _interopRequireDefault(_foundationSites);
+
+__webpack_require__(40);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_webfontloader2.default.load({
+	google: {
+		families: ['Droid Sans', 'Droid Serif', 'Droid Serif:italic', 'Bree Serif']
+	}
+});
+
+window.$ = _jquery2.default;
+// If you want to pick and choose which modules to include, comment out the above and uncomment
+// the line below
+
+// import './lib/demosite';
+
+(0, _jquery2.default)(document).foundation();
+
+var data = {
+	$window: (0, _jquery2.default)(window),
+	$body: (0, _jquery2.default)('body'),
+	loadedClass: 'is-loaded',
+	offClass: 'is-off',
+	scrolled: {
+		status: false,
+		$el: (0, _jquery2.default)('body'),
+		class: 'is-scrolled',
+		threshold: 200,
+		get state() {
+			return this.status;
+		},
+		set state(state) {
+
+			var h = this.$el.hasClass(this.class);
+			var s = this.status;
+			var t = this.threshold;
+			if (s < t && state >= t && !h) {
+				this.$el.addClass(this.class);
+			} else if (s >= t && state < t && h) {
+				this.$el.removeClass(this.class);
+			}
+
+			this.status = state;
+		}
+	},
+	$spinner: null
+};
+
+var Header = {
+
+	data: {
+
+		$iFrame: (0, _jquery2.default)('.js-iframe'),
+		$spinner: (0, _jquery2.default)('.js-spinner'),
+		scroll: function scroll() {
+			modules.header.scroll();
+		}
+	},
+
+	loadIframe: function loadIframe() {
+		var _this = this;
+
+		this.data.$iFrame.on('load', function () {
+
+			data.$body.addClass(data.loadedClass);
+			data.$spinner = _this.data.$spinner.clone();
+			_this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', function () {
+				_this.data.$spinner.remove();
+			});
+		});
+	},
+	scroll: function scroll() {
+		data.scrolled.state = data.$window.scrollTop();
+	},
+	init: function init() {
+
+		this.loadIframe();
+		this.scroll();
+		(0, _jquery2.default)(window).on('scroll', this.data.scroll);
+	}
+};
+
+var modules = {
+	header: Header
+};
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+	for (var _iterator = Object.entries(modules)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+		var _step$value = _slicedToArray(_step.value, 2),
+		    key = _step$value[0],
+		    module = _step$value[1];
+
+		module.init();
+	}
+} catch (err) {
+	_didIteratorError = true;
+	_iteratorError = err;
+} finally {
+	try {
+		if (!_iteratorNormalCompletion && _iterator.return) {
+			_iterator.return();
+		}
+	} finally {
+		if (_didIteratorError) {
+			throw _iteratorError;
+		}
+	}
+}
+
+window.App = modules;
+window.App.Data = data;
+
+// return modules;
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _foundation = __webpack_require__(19);
+
+var _foundationUtil = __webpack_require__(1);
+
+var _foundationUtil2 = __webpack_require__(7);
+
+var _foundationUtil3 = __webpack_require__(8);
+
+var _foundationUtil4 = __webpack_require__(3);
+
+var _foundationUtil5 = __webpack_require__(4);
+
+var _foundationUtil6 = __webpack_require__(6);
+
+var _foundationUtil7 = __webpack_require__(9);
+
+var _foundationUtil8 = __webpack_require__(17);
+
+var _foundationUtil9 = __webpack_require__(10);
+
+var _foundationUtil10 = __webpack_require__(5);
+
+var _foundation2 = __webpack_require__(18);
+
+var _foundation3 = __webpack_require__(11);
+
+var _foundation4 = __webpack_require__(12);
+
+var _foundation5 = __webpack_require__(13);
+
+var _foundation6 = __webpack_require__(20);
+
+var _foundation7 = __webpack_require__(14);
+
+var _foundation8 = __webpack_require__(21);
+
+var _foundation9 = __webpack_require__(22);
+
+var _foundation10 = __webpack_require__(23);
+
+var _foundation11 = __webpack_require__(24);
+
+var _foundation12 = __webpack_require__(25);
+
+var _foundation13 = __webpack_require__(28);
+
+var _foundation14 = __webpack_require__(29);
+
+var _foundation15 = __webpack_require__(30);
+
+var _foundation16 = __webpack_require__(31);
+
+var _foundation17 = __webpack_require__(15);
+
+var _foundation18 = __webpack_require__(32);
+
+var _foundation19 = __webpack_require__(16);
+
+var _foundation20 = __webpack_require__(33);
+
+var _foundation21 = __webpack_require__(34);
+
+var _foundation22 = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_foundation.Foundation.addToJquery(_jquery2.default);
+
+// Add Foundation Utils to Foundation global namespace for backwards
+// compatibility.
+
+_foundation.Foundation.rtl = _foundationUtil.rtl;
+_foundation.Foundation.GetYoDigits = _foundationUtil.GetYoDigits;
+_foundation.Foundation.transitionend = _foundationUtil.transitionend;
+
+_foundation.Foundation.Box = _foundationUtil2.Box;
+_foundation.Foundation.onImagesLoaded = _foundationUtil3.onImagesLoaded;
+_foundation.Foundation.Keyboard = _foundationUtil4.Keyboard;
+_foundation.Foundation.MediaQuery = _foundationUtil5.MediaQuery;
+_foundation.Foundation.Motion = _foundationUtil6.Motion;
+_foundation.Foundation.Move = _foundationUtil6.Move;
+_foundation.Foundation.Nest = _foundationUtil7.Nest;
+_foundation.Foundation.Timer = _foundationUtil8.Timer;
+
+// Touch and Triggers previously were almost purely sede effect driven,
+// so n../../js// need to add it to Foundation, just init them.
+
+_foundationUtil9.Touch.init(_jquery2.default);
+
+_foundationUtil10.Triggers.init(_jquery2.default, _foundation.Foundation);
+
+_foundation.Foundation.plugin(_foundation2.Abide, 'Abide');
+
+_foundation.Foundation.plugin(_foundation3.Accordion, 'Accordion');
+
+_foundation.Foundation.plugin(_foundation4.AccordionMenu, 'AccordionMenu');
+
+_foundation.Foundation.plugin(_foundation5.Drilldown, 'Drilldown');
+
+_foundation.Foundation.plugin(_foundation6.Dropdown, 'Dropdown');
+
+_foundation.Foundation.plugin(_foundation7.DropdownMenu, 'DropdownMenu');
+
+_foundation.Foundation.plugin(_foundation8.Equalizer, 'Equalizer');
+
+_foundation.Foundation.plugin(_foundation9.Interchange, 'Interchange');
+
+_foundation.Foundation.plugin(_foundation10.Magellan, 'Magellan');
+
+_foundation.Foundation.plugin(_foundation11.OffCanvas, 'OffCanvas');
+
+_foundation.Foundation.plugin(_foundation12.Orbit, 'Orbit');
+
+_foundation.Foundation.plugin(_foundation13.ResponsiveMenu, 'ResponsiveMenu');
+
+_foundation.Foundation.plugin(_foundation14.ResponsiveToggle, 'ResponsiveToggle');
+
+_foundation.Foundation.plugin(_foundation15.Reveal, 'Reveal');
+
+_foundation.Foundation.plugin(_foundation16.Slider, 'Slider');
+
+_foundation.Foundation.plugin(_foundation17.SmoothScroll, 'SmoothScroll');
+
+_foundation.Foundation.plugin(_foundation18.Sticky, 'Sticky');
+
+_foundation.Foundation.plugin(_foundation19.Tabs, 'Tabs');
+
+_foundation.Foundation.plugin(_foundation20.Toggler, 'Toggler');
+
+_foundation.Foundation.plugin(_foundation21.Tooltip, 'Tooltip');
+
+_foundation.Foundation.plugin(_foundation22.ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
+
+exports.default = _foundation.Foundation;
 
 /***/ }),
 /* 37 */
@@ -12889,24 +12890,146 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
+var _foundation = __webpack_require__(19);
+
+var _foundationUtil = __webpack_require__(1);
+
+var _foundationUtil2 = __webpack_require__(7);
+
+var _foundationUtil3 = __webpack_require__(8);
+
+var _foundationUtil4 = __webpack_require__(3);
+
+var _foundationUtil5 = __webpack_require__(4);
+
+var _foundationUtil6 = __webpack_require__(6);
+
+var _foundationUtil7 = __webpack_require__(9);
+
+var _foundationUtil8 = __webpack_require__(17);
+
+var _foundationUtil9 = __webpack_require__(10);
+
+var _foundationUtil10 = __webpack_require__(5);
+
+var _foundation2 = __webpack_require__(18);
+
+var _foundation3 = __webpack_require__(11);
+
+var _foundation4 = __webpack_require__(12);
+
+var _foundation5 = __webpack_require__(13);
+
+var _foundation6 = __webpack_require__(20);
+
+var _foundation7 = __webpack_require__(14);
+
+var _foundation8 = __webpack_require__(21);
+
+var _foundation9 = __webpack_require__(22);
+
+var _foundation10 = __webpack_require__(23);
+
+var _foundation11 = __webpack_require__(24);
+
+var _foundation12 = __webpack_require__(25);
+
+var _foundation13 = __webpack_require__(28);
+
+var _foundation14 = __webpack_require__(29);
+
+var _foundation15 = __webpack_require__(30);
+
+var _foundation16 = __webpack_require__(31);
+
+var _foundation17 = __webpack_require__(15);
+
+var _foundation18 = __webpack_require__(32);
+
+var _foundation19 = __webpack_require__(16);
+
+var _foundation20 = __webpack_require__(33);
+
+var _foundation21 = __webpack_require__(34);
+
+var _foundation22 = __webpack_require__(27);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_jquery2.default.ajax({
-  dataType: 'jsonp',
-  url: 'https://api.github.com/repos/olefredrik/foundationpress?callback=foundationpressGithub&access_token=ed6229228dbc763038dbf1e68d0d8a4a0935b38a',
-  success: function success(response) {
-    if (response && response.data.watchers) {
-      var watchers = (Math.round(response.data.watchers / 100, 10) / 10).toFixed(1);
-      (0, _jquery2.default)('#stargazers a').html(watchers + 'k stargazers');
-    }
-  }
-});
+_foundation.Foundation.addToJquery(_jquery2.default);
+
+// Add Foundation Utils to Foundation global namespace for backwards
+// compatibility.
+
+_foundation.Foundation.rtl = _foundationUtil.rtl;
+_foundation.Foundation.GetYoDigits = _foundationUtil.GetYoDigits;
+_foundation.Foundation.transitionend = _foundationUtil.transitionend;
+
+_foundation.Foundation.Box = _foundationUtil2.Box;
+_foundation.Foundation.onImagesLoaded = _foundationUtil3.onImagesLoaded;
+_foundation.Foundation.Keyboard = _foundationUtil4.Keyboard;
+_foundation.Foundation.MediaQuery = _foundationUtil5.MediaQuery;
+_foundation.Foundation.Motion = _foundationUtil6.Motion;
+_foundation.Foundation.Move = _foundationUtil6.Move;
+_foundation.Foundation.Nest = _foundationUtil7.Nest;
+_foundation.Foundation.Timer = _foundationUtil8.Timer;
+
+// Touch and Triggers previously were almost purely sede effect driven,
+// so no // need to add it to Foundation, just init them.
+
+_foundationUtil9.Touch.init(_jquery2.default);
+
+_foundationUtil10.Triggers.init(_jquery2.default, _foundation.Foundation);
+
+_foundation.Foundation.plugin(_foundation2.Abide, 'Abide');
+
+_foundation.Foundation.plugin(_foundation3.Accordion, 'Accordion');
+
+_foundation.Foundation.plugin(_foundation4.AccordionMenu, 'AccordionMenu');
+
+_foundation.Foundation.plugin(_foundation5.Drilldown, 'Drilldown');
+
+_foundation.Foundation.plugin(_foundation6.Dropdown, 'Dropdown');
+
+_foundation.Foundation.plugin(_foundation7.DropdownMenu, 'DropdownMenu');
+
+_foundation.Foundation.plugin(_foundation8.Equalizer, 'Equalizer');
+
+_foundation.Foundation.plugin(_foundation9.Interchange, 'Interchange');
+
+_foundation.Foundation.plugin(_foundation10.Magellan, 'Magellan');
+
+_foundation.Foundation.plugin(_foundation11.OffCanvas, 'OffCanvas');
+
+_foundation.Foundation.plugin(_foundation12.Orbit, 'Orbit');
+
+_foundation.Foundation.plugin(_foundation13.ResponsiveMenu, 'ResponsiveMenu');
+
+_foundation.Foundation.plugin(_foundation14.ResponsiveToggle, 'ResponsiveToggle');
+
+_foundation.Foundation.plugin(_foundation15.Reveal, 'Reveal');
+
+_foundation.Foundation.plugin(_foundation16.Slider, 'Slider');
+
+_foundation.Foundation.plugin(_foundation17.SmoothScroll, 'SmoothScroll');
+
+_foundation.Foundation.plugin(_foundation18.Sticky, 'Sticky');
+
+_foundation.Foundation.plugin(_foundation19.Tabs, 'Tabs');
+
+_foundation.Foundation.plugin(_foundation20.Toggler, 'Toggler');
+
+_foundation.Foundation.plugin(_foundation21.Tooltip, 'Tooltip');
+
+_foundation.Foundation.plugin(_foundation22.ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
+
+module.exports = _foundation.Foundation;
 
 /***/ }),
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(19);
+module.exports = __webpack_require__(35);
 
 
 /***/ })

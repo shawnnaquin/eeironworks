@@ -80,7 +80,7 @@ get_header(); ?>
 ?>
 	<div class="featured-images">
         <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-        	<div class=" featured-image" data-open="" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
+        	<div class=" featured-image" data-open="featured-image-<?php the_ID(); ?>" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
         	</div>
         <?php endwhile; ?>
 	</div>
@@ -88,8 +88,8 @@ get_header(); ?>
 	<?php rewind_posts(); ?>
 
     <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-	    <div class="reveal" id="featured-image-" data-reveal >
-	    	hello
+	    <div class="reveal" id="featured-image-<?php the_ID(); ?>" data-reveal data-close-on-click="true" data-animation-in="fade-in fast" data-animation-out="fade-out fast">
+	    	<?php the_post_thumbnail( 'full' ); ?>
 	    </div>
     <?php endwhile; ?>
 
