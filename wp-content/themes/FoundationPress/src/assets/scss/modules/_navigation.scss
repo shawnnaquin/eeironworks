@@ -114,6 +114,8 @@
     font-weight: bold;
     font-size: 0.8rem;
     line-height: 1;
+    font-family:"Droid Sans";
+    transform:translateY(2px);
 
     &:hover:not(.button) {
       background-color: #42525D;
@@ -123,7 +125,6 @@
   .menu .active > a { background-color: #ccc; }
 
   .menu>li:not(.menu-text)>a { padding: 1rem; }
-  .menu li:not(:last-child) { border-right: 1px solid #4e4e4e; }
 
   .dropdown.menu .submenu { border: 0; }
   .dropdown.menu .has-submenu.is-down-arrow a { padding-right: 1rem; }

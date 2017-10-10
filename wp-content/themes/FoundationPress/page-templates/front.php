@@ -63,6 +63,8 @@ get_header(); ?>
 <?php endwhile;?>
 <?php do_action( 'foundationpress_after_content' ); ?>
 
+<?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
+
 <?php
 
     $args = array(
@@ -78,11 +80,20 @@ get_header(); ?>
 ?>
 	<div class="featured-images">
         <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-        	<div class=" featured-image" style="background-image: url( <?php the_post_thumbnail_url( $size ); ?> );">
+        	<div class=" featured-image" data-open="" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
         	</div>
         <?php endwhile; ?>
 	</div>
-    <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
+
+	<?php rewind_posts(); ?>
+
+    <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+	    <div class="reveal" id="featured-image-" data-reveal >
+	    	hello
+	    </div>
+    <?php endwhile; ?>
+
+<?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
 
 <div class="section-divider">
 	<hr />
