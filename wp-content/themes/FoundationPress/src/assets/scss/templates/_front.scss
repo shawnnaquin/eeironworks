@@ -323,8 +323,44 @@
       width:33%;
       padding-bottom:33%;
     }
+    &:active, &:focus {
+      border:0;
+      outline:none;
+    }
+  }
+  .feature-image-link {
+    display:block;
+    float:left;
+    width:48px;
+    height:48px;
+    border-radius:100%;
+    font-size:24px;
+    line-height:1;
+    text-align:center;
+    border:1px solid $secondary-color;
+    margin:8px;
+    color: $secondary-color;
+    background:rgba($white, 0);
+    transition: color 200ms ease-out;
+    transition-property: background, color, border-color;
+    &:hover {
+      border-color: $space-gray;
+      color: $space-gray;
+      background:rgba($white, 0.2);
+      transition-timing-function: ease-in;
+    }
+    i {
+      position:relative;
+      top:50%;
+      transform:translateY(-50%);
+    }
   }
 }
+
+.orbit-container {
+  height:auto!important;
+}
+
 // Section divider
 .section-divider {
   @include xy-grid-container;

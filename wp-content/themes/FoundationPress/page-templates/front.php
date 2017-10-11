@@ -72,6 +72,8 @@ get_header(); ?>
         'orderby' => 'menu_order',
         'order'     => 'ASC',
         'meta_key' => 'url',
+        'meta_key' => 'sharing_type',
+        'meta_key' => 'url',
         'posts_per_page'=> 6,
     );
 
@@ -80,18 +82,67 @@ get_header(); ?>
 ?>
 	<div class="featured-images">
         <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-        	<div class=" featured-image" data-open="featured-image-<?php the_ID(); ?>" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
-        	</div>
+        	<button class=" featured-image" data-open="featured-image" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
+    		<?php
+    			$url = get_field('url');
+    			if ( $url ):
+    		?>
+        		<a target="_blank" href="<?php echo $url ?>"class="feature-image-link">
+        			<i class="fa fa-<?php echo get_field('sharing_type');?>"></i>
+        		</a>
+        	<?php
+        		endif;
+        	?>
+        	</button>
         <?php endwhile; ?>
 	</div>
 
 	<?php rewind_posts(); ?>
 
-    <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-	    <div class="reveal" id="featured-image-<?php the_ID(); ?>" data-reveal data-close-on-click="true" data-animation-in="fade-in fast" data-animation-out="fade-out fast">
-	    	<?php the_post_thumbnail( 'full' ); ?>
-	    </div>
-    <?php endwhile; ?>
+    <div class="reveal" id="featured-image" data-reveal data-close-on-click="true" data-animation-in="fade-in fast" data-animation-out="fade-out fast">
+    	<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>
+    	  <div class="orbit-wrapper">
+    	    <div class="orbit-controls">
+    	      <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+    	      <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+    	    </div>
+    	    <ul class="orbit-container">
+    	    	<?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+    	    		<li class="is-active orbit-slide">
+    	    		  <figure class="orbit-figure">
+	    	    		<?php 
+	    	    			the_post_thumbnail( 'large', array('class' => 'orbit-image') ); 
+	    	    			$content = get_the_content(); 
+	    	    			if ($content):
+	    	    		?>
+    	    		    <figcaption class="orbit-caption">
+    	    		    	<?php echo wp_filter_nohtml_kses( $content ); ?>
+    	    		    </figcaption>
+	    	    		<? endif; ?>
+    	    		  </figure>
+    	    		</li>
+    	    	<?php endwhile; ?>
+    	    </ul>
+    	  </div>
+
+	<?php rewind_posts(); ?>
+
+    	  <nav class="orbit-bullets">
+    	  	<?php $count = 0; ?>
+	    	<?php while ($the_query->have_posts()) : $the_query->the_post();?>
+
+	    	    <button
+	    	    	class="<?php if ( $count === 0 ): echo 'is-active'; endif; ?>"
+	    	    	data-slide="<?php echo $count ?>"
+	    	    >
+		    		<?php if ( $count === 0) : ?>
+    	    		<span class="show-for-sr">Current Slide</span>
+	    	    	<?php endif; ?>
+	    	    </button>
+	    	<?php $count++; endwhile; ?>
+    	  </nav>
+    	</div>
+    </div>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
 
