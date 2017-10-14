@@ -80,7 +80,7 @@ get_header(); ?>
     $the_query = new WP_Query( $args );
 
 ?>
-	<div class="featured-images">
+	<section class="featured-images">
         <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
         	<button class=" featured-image" data-open="featured-image" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
     		<?php
@@ -95,7 +95,7 @@ get_header(); ?>
         	?>
         	</button>
         <?php endwhile; ?>
-	</div>
+	</section>
 
 	<?php rewind_posts(); ?>
 
@@ -143,6 +143,37 @@ get_header(); ?>
     	  </nav>
     	</div>
     </div>
+
+<?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
+
+<?php
+
+    $args = array(
+        'post_type'=>'section',
+        'orderby' => 'menu_order',
+        'order'     => 'ASC',
+        'posts_per_page'=> -1,
+    );
+
+    $the_query = new WP_Query( $args );
+
+?>
+
+<section class="featured-sections">
+    <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+    	<article class="featured-section-article" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">
+
+    		<div class="featured-section-content">
+				<h1><?php the_title(); ?></h1>
+				<div class="section-divider">
+					<hr />
+				</div>
+	    		<?php the_content(); ?>
+    		</div>
+
+    	</article>
+	<?php endwhile; ?>
+</section>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
 
