@@ -334,27 +334,7 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	max-width:none;
-	&.no-image {
-		padding-top:inherit;
-		@include breakpoint(medium) {
-			padding-top:inherit;
-		}
-		@include breakpoint(large) {
-			padding-top:inherit;
-		}
-		&.featured-section-article-video {
-			padding-bottom:0;
-			.featured-section-content {
-				background-color: $white;
-				background-image: none;
-				h1 {
-					color:$space-gray;
-					margin-bottom:3rem;
-				}
-				border:0;
-			}
-		}
-	}
+	margin:0;
 }
 .featured-section-content {
 	@include xy-cell(12);
@@ -401,6 +381,24 @@
 		color: $space-gray;
 		border-radius: 8px;
 		border:1px solid $space-gray;
+	}
+}
+.featured-section-article.no-image {
+	padding-top:inherit;
+	@include breakpoint(medium) {
+		padding-top:inherit;
+	}
+	@include breakpoint(large) {
+		padding-top:inherit;
+	}
+	padding-bottom:0;
+	.featured-section-content {
+		background-color: $white;
+		background-image: none;
+		h1 {
+			color:$space-gray;
+		}
+		border:0;
 	}
 }
 // Section divider

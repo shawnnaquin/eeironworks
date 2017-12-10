@@ -110,9 +110,9 @@ get_header(); ?>
     	    	<?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
     	    		<li class="is-active orbit-slide">
     	    		  <figure class="orbit-figure">
-	    	    		<?php 
-	    	    			the_post_thumbnail( 'large', array('class' => 'orbit-image') ); 
-	    	    			$content = get_the_content(); 
+	    	    		<?php
+	    	    			the_post_thumbnail( 'large', array('class' => 'orbit-image') );
+	    	    			$content = get_the_content();
 	    	    			if ($content):
 	    	    		?>
     	    		    <figcaption class="orbit-caption">
@@ -152,6 +152,7 @@ get_header(); ?>
         'post_type'=>'section',
         'orderby' => 'menu_order',
         'order'     => 'ASC',
+        'meta_key' => 'type',
         'posts_per_page'=> -1,
     );
 
@@ -161,7 +162,20 @@ get_header(); ?>
 
 <section class="featured-sections">
     <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-    	<article class="featured-section-article" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">
+    	<?php
+    		$postType = get_field('type');
+			$p = $postType === 'image' ? '' : 'no-image';
+    	?>
+    	<article
+    		class="featured-section-article <?php echo $p ?>"
+    		style="
+    			<?php
+					if ( $postType === 'image' ) :
+    			?>
+	    			background-image:url('<?php the_post_thumbnail_url(); ?>');
+	    		<?php endif; ?>
+    		"
+    	>
 
     		<div class="featured-section-content">
 				<h1><?php the_title(); ?></h1>
@@ -196,11 +210,14 @@ get_header(); ?>
 
 <section class="featured-sections">
     <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-    	<article class="featured-section-article no-image featured-section-article-video" >
+    	<article class="featured-section-article no-image" >
 
     		<div class="featured-section-content">
     		<?php if ( get_option( 'blogname' ) ) : ?>
     			<h1><?php the_title(); ?></h1>
+    			<div class="section-divider">
+    				<hr />
+    			</div>
 			 <?php endif; ?>
 				<div class="featured-section-iframe">
 					<?php the_content(); ?>
@@ -212,60 +229,19 @@ get_header(); ?>
 </section>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
-<!-- 
-<div class="section-divider">
-	<hr />
-</div>
- -->
-<section class="benefits">
-<!-- 	<header>
-		<h2>Build Foundation based sites, powered by WordPress</h2>
-		<h4>Foundation is the professional choice for designers, developers and teams. <br /> WordPress is by far, <a href="http://trends.builtwith.com/cms">the world's most popular CMS</a> (currently powering 38% of the web).</h4>
-	</header>
-
-	<div class="semantic">
-		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/semantic.svg" alt="semantic">
-		<h3>Semantic</h3>
-		<p>Everything is semantic. You can have the cleanest markup without sacrificing the utility and speed of Foundation.</p>
-	</div>
-
-	<div class="responsive">
-		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/responsive.svg" alt="responsive">
-		<h3>Responsive</h3>
-		<p>You can build for small devices first. Then, as devices get larger and larger, layer in more complexity for a complete responsive design.</p>
-
-	</div>
-
-	<div class="customizable">
-		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/customizable.svg" alt="customizable">
-		<h3>Customizable</h3>
-		<p>You can customize your build to include or remove certain elements, as well as define the size of columns, colors, font size and more.</p>
-
-	</div>
-
-	<div class="professional">
-		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/professional.svg" alt="professional">
-		<h3>Professional</h3>
-		<p>Millions of designers and developers depend on Foundation. We have business support, training and consulting to help grow your product or service.</p>
-	</div>
-
-	<div class="why-foundation">
-		<a href="/kitchen-sink">See what's in Foundation out of the box →</a>
-	</div> -->
-</section>
 
 <section class="featured-sections">
-    	<article class="featured-section-article" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">
+	<article class="featured-section-article no-image" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">
 
-    		<div class="featured-section-content">
-				<h1>Contact</h1>
-				<div class="section-divider">
-					<hr />
-				</div>
-				<?php echo do_shortcode( '[hf_form slug="contact-ee-iron-works"]' ); ?> 
-    		</div>
+		<div class="featured-section-content">
+			<h1>Contact</h1>
+			<div class="section-divider">
+				<hr />
+			</div>
+			<?php echo do_shortcode( '[hf_form slug="contact-ee-iron-works"]' ); ?>
+		</div>
 
-    	</article>
+	</article>
 </section>
 
 <?php get_footer();
