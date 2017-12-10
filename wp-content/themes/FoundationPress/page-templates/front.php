@@ -177,9 +177,9 @@ get_header(); ?>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
 
-<div class="section-divider">
+<!-- <div class="section-divider">
 	<hr />
-</div>
+</div> -->
 
 <?php
 
@@ -196,7 +196,7 @@ get_header(); ?>
 
 <section class="featured-sections">
     <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-    	<article class="featured-section-article" >
+    	<article class="featured-section-article no-image featured-section-article-video" >
 
     		<div class="featured-section-content">
     		<?php if ( get_option( 'blogname' ) ) : ?>
@@ -212,11 +212,11 @@ get_header(); ?>
 </section>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
-
+<!-- 
 <div class="section-divider">
 	<hr />
 </div>
-
+ -->
 <section class="benefits">
 <!-- 	<header>
 		<h2>Build Foundation based sites, powered by WordPress</h2>
@@ -252,6 +252,20 @@ get_header(); ?>
 	<div class="why-foundation">
 		<a href="/kitchen-sink">See what's in Foundation out of the box →</a>
 	</div> -->
+</section>
+
+<section class="featured-sections">
+    	<article class="featured-section-article" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">
+
+    		<div class="featured-section-content">
+				<h1>Contact</h1>
+				<div class="section-divider">
+					<hr />
+				</div>
+				<?php echo do_shortcode( '[hf_form slug="contact-ee-iron-works"]' ); ?> 
+    		</div>
+
+    	</article>
 </section>
 
 <?php get_footer();

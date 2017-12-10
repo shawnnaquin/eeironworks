@@ -1,0 +1,302 @@
+# Copyright (C) 2017 html-forms
+# This file is distributed under the same license as the html-forms package.
+msgid ""
+msgstr ""
+"Project-Id-Version: html-forms\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/Form.php:53
+msgid "Please enable JavaScript for this form to work."
+msgstr ""
+
+#: src/Forms.php:288
+msgid "Error:"
+msgstr ""
+
+#: src/Forms.php:288
+msgid "No form found with slug %s"
+msgstr ""
+
+#: src/functions.php:38
+msgid "Thank you! We will be in touch soon."
+msgstr ""
+
+#: src/functions.php:39
+msgid "Sorry, that email address looks invalid."
+msgstr ""
+
+#: src/functions.php:40
+msgid "Please fill in the required fields."
+msgstr ""
+
+#: src/functions.php:41
+msgid "Oops. An error occurred."
+msgstr ""
+
+#: src/Actions/Email.php:14
+msgid "Send Email"
+msgstr ""
+
+#: src/Actions/Email.php:25
+msgid "From"
+msgstr ""
+
+#: src/Actions/Email.php:31
+msgid "To"
+msgstr ""
+
+#: src/Actions/Email.php:37, src/Admin/Admin.php:289
+msgid "Subject"
+msgstr ""
+
+#: src/Actions/Email.php:39
+msgid "Your email subject"
+msgstr ""
+
+#: src/Actions/Email.php:43, src/Admin/Admin.php:290
+msgid "Message"
+msgstr ""
+
+#: src/Actions/Email.php:45
+msgid "Your email message"
+msgstr ""
+
+#: src/Actions/Email.php:46
+msgid "You can use the following variables: "
+msgstr ""
+
+#: src/Admin/Admin.php:287
+msgid "Your name"
+msgstr ""
+
+#: src/Admin/Admin.php:288
+msgid "Your email"
+msgstr ""
+
+#: src/Admin/Admin.php:291
+msgid "Send"
+msgstr ""
+
+#: src/Admin/Table.php:110
+msgid "Form"
+msgstr ""
+
+#: src/Admin/Table.php:111
+msgid "Shortcode"
+msgstr ""
+
+#: src/Admin/Table.php:177, src/Admin/views/edit-form.php:4, src/Admin/views/tab-submissions-detail.php:57
+msgid "Fields"
+msgstr ""
+
+#: src/Admin/Table.php:178, src/Admin/views/edit-form.php:5
+msgid "Messages"
+msgstr ""
+
+#: src/Admin/Table.php:179, src/Admin/views/edit-form.php:6, src/Admin/views/global-settings.php:8, src/Admin/views/global-settings.php:11
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/Table.php:180, src/Admin/views/edit-form.php:7
+msgid "Actions"
+msgstr ""
+
+#: src/Admin/Table.php:181, src/Admin/views/edit-form.php:8
+msgid "Submissions"
+msgstr ""
+
+#: src/Admin/Table.php:207
+msgid "No forms found. <a href=\"%s\">Would you like to create one now</a>?"
+msgstr ""
+
+#: src/Admin/views/add-form.php:10, src/Admin/views/edit-form.php:16, src/Admin/views/global-settings.php:6, src/Admin/views/overview.php:12
+msgid "You are here: "
+msgstr ""
+
+#: src/Admin/views/add-form.php:12, src/Admin/views/add-form.php:15, src/Admin/views/overview.php:20
+msgid "Add new form"
+msgstr ""
+
+#: src/Admin/views/add-form.php:22
+msgid "Your form title.."
+msgstr ""
+
+#: src/Admin/views/admin-footer.php:2
+msgid "Looking for help?"
+msgstr ""
+
+#: src/Admin/views/admin-footer.php:3
+msgid "Check out the <a href=\"%s\">HTML Forms knowledge base</a>"
+msgstr ""
+
+#: src/Admin/views/edit-form.php:18, src/Admin/views/edit-form.php:21
+msgid "Edit form"
+msgstr ""
+
+#: src/Admin/views/edit-form.php:24
+msgid "Form updated."
+msgstr ""
+
+#: src/Admin/views/edit-form.php:34
+msgid "Form title"
+msgstr ""
+
+#: src/Admin/views/edit-form.php:35
+msgid "Enter the title of your form"
+msgstr ""
+
+#: src/Admin/views/edit-form.php:39
+msgid "Edit slug"
+msgstr ""
+
+#: src/Admin/views/edit-form.php:39
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/views/edit-form.php:42
+msgid "Copy this shortcode and paste it into your post, page, or text widget content:"
+msgstr ""
+
+#: src/Admin/views/global-settings.php:14
+msgid "Settings updated."
+msgstr ""
+
+#: src/Admin/views/global-settings.php:22
+msgid "Load stylesheet?"
+msgstr ""
+
+#: src/Admin/views/global-settings.php:27
+msgid "Select \"yes\" to apply some basic form styles to all HTML Forms."
+msgstr ""
+
+#: src/Admin/views/overview.php:14, src/Admin/views/overview.php:17
+msgid "Forms"
+msgstr ""
+
+#: src/Admin/views/tab-actions.php:6
+msgid "Form Actions"
+msgstr ""
+
+#: src/Admin/views/tab-actions.php:21
+msgid "No form actions configured for this form."
+msgstr ""
+
+#: src/Admin/views/tab-actions.php:27
+msgid "Add form action"
+msgstr ""
+
+#: src/Admin/views/tab-actions.php:28
+msgid "Use the below button(s) to configure and perform an action whenever this form is successfully submitted."
+msgstr ""
+
+#: src/Admin/views/tab-fields.php:6
+msgid "Form code"
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:6
+msgid "Form Messages"
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:10
+msgid "Success"
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:13
+msgid "The text that shows after a successful form submission."
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:17
+msgid "Invalid email address"
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:20
+msgid "The text that shows when an invalid email address is given."
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:24
+msgid "Required field missing"
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:27
+msgid "The text that shows when a required field for the selected list(s) is missing."
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:32
+msgid "General error"
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:35
+msgid "The text that shows when a general error occured."
+msgstr ""
+
+#: src/Admin/views/tab-messages.php:42
+msgid "HTML tags like %s are allowed in the message fields."
+msgstr ""
+
+#: src/Admin/views/tab-settings.php:1
+msgid "Form Settings"
+msgstr ""
+
+#: src/Admin/views/tab-settings.php:6
+msgid "Hide form after a successful sign-up?"
+msgstr ""
+
+#: src/Admin/views/tab-settings.php:17
+msgid "Select \"yes\" to hide the form fields after a successful sign-up."
+msgstr ""
+
+#: src/Admin/views/tab-settings.php:23
+msgid "Redirect to URL after successful sign-ups"
+msgstr ""
+
+#: src/Admin/views/tab-settings.php:25
+msgid "Example: %s"
+msgstr ""
+
+#: src/Admin/views/tab-settings.php:26
+msgid "Leave empty or enter <code>0</code> for no redirect. Otherwise, use complete (absolute) URLs, including <code>http://</code>."
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:7
+msgid "Viewing Form Submission"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:37, src/Admin/views/tab-submissions-list.php:37
+msgid "Timestamp"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:41
+msgid "User Agent"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:45
+msgid "IP Address"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:49
+msgid "Referrer URL"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:80
+msgid "Raw"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-detail.php:85
+msgid "Back to submissions list"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-list.php:12
+msgid "Form Submissions"
+msgstr ""
+
+#: src/Admin/views/tab-submissions-list.php:70
+msgid "Nothing to see here, yet!"
+msgstr ""
