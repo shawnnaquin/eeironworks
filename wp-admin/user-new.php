@@ -75,7 +75,7 @@ if ( isset($_REQUEST['action']) && 'adduser' == $_REQUEST['action'] ) {
 				$redirect = add_query_arg( array( 'update' => 'could_not_add' ), 'user-new.php' );
 			}
 		} else {
-			$newuser_key = substr( md5( $user_id ), 0, 5 );
+			$newuser_key = wp_generate_password( 20, false );
 			add_option( 'new_user_' . $newuser_key, array( 'user_id' => $user_id, 'email' => $user_details->user_email, 'role' => $_REQUEST[ 'role' ] ) );
 
 			$roles = get_editable_roles();
@@ -156,7 +156,7 @@ Please click the following link to confirm the invite:
 				add_filter( 'wpmu_signup_user_notification', '__return_false' ); // Disable confirmation email
 				add_filter( 'wpmu_welcome_user_notification', '__return_false' ); // Disable welcome email
 			}
-			wpmu_signup_user( $new_user_login, $new_user_email, array( 'add_to_blog' => $wpdb->blogid, 'new_role' => $_REQUEST['role'] ) );
+			wpmu_signup_user( $new_user_login, $new_user_email, array( 'add_to_blog' => get_current_blog_id(), 'new_role' => $_REQUEST['role'] ) );
 			if ( isset( $_POST[ 'noconfirmation' ] ) && current_user_can( 'manage_network_users' ) ) {
 				$key = $wpdb->get_var( $wpdb->prepare( "SELECT activation_key FROM {$wpdb->signups} WHERE user_login = %s AND user_email = %s", $new_user_login, $new_user_email ) );
 				$new_user = wpmu_activate_signup( $key );

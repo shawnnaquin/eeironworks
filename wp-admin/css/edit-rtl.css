@@ -330,7 +330,7 @@ form#tags-filter {
 }
 
 #content-resize-handle {
-	background: transparent url(../images/resize.gif) no-repeat scroll right bottom;
+	background: transparent url(../images/resize.gif) no-repeat scroll left bottom;
 	width: 12px;
 	cursor: row-resize;
 }
@@ -529,7 +529,8 @@ span.wp-media-buttons-icon:before {
 	margin: 25px;
 }
 
-#post-lock-dialog .post-locked-message a.button {
+#post-lock-dialog .post-locked-message a.button,
+#file-editor-warning .button {
 	margin-left: 10px;
 }
 
@@ -574,7 +575,7 @@ span.wp-media-buttons-icon:before {
 	position: absolute;
 }
 
-.tagchecklist > span {
+.tagchecklist > li {
 	float: right;
 	margin-left: 25px;
 	font-size: 13px;
@@ -1051,6 +1052,14 @@ p.popular-tags a {
 	margin: 2px 0 12px;
 }
 
+.the-tagcloud ul {
+	margin: 0;
+}
+
+.the-tagcloud ul li {
+	display: inline-block;
+}
+
 /* Suggest.js autocomplete, no more used by core. */
 .ac_results {
 	display: none;
@@ -1290,7 +1299,7 @@ table.links-table {
   (min-resolution: 120dpi) {
 	#content-resize-handle,
 	#post-body .wp_themeSkin .mceStatusbar a.mceResize {
-		background: transparent url(../images/resize-2x.gif) no-repeat scroll right bottom;
+		background: transparent url(../images/resize-2x.gif) no-repeat scroll left bottom;
 		background-size: 11px 11px;
 	}
 
@@ -1440,7 +1449,7 @@ table.links-table {
 		margin: 25px 10px;
 	}
 
-	.tagchecklist > span {
+	.tagchecklist > li {
 		font-size: 16px;
 		line-height: 1.4;
 	}

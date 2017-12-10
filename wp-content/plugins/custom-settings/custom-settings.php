@@ -57,6 +57,9 @@ add_filter('admin_init', 'my_general_settings_register_fields');
         register_setting('general', 'video_subheader', 'esc_attr');
         add_settings_field('video_subheader', '<label for="video_subheader">'.__('Video Subheader' , 'video_subheader' ).'</label>' , 'video_subheader_html', 'general');
 
+        register_setting('general', 'video_title', 'esc_attr');
+        add_settings_field('video_title', '<label for="video_title">'.__('Show Video Titles?' , 'video_title' ).'</label>' , 'video_title_html', 'general');
+
         register_setting('general', 'site_logo', 'esc_attr');
         add_settings_field('site_logo', '<label for="site_logo">'.__('Site Logo Image <br/><small>(*.png, *.gif)<br/><span style="color:red">(required)</span></small>' , 'site_logo' ).'</label>' , 'site_logo_html', 'general');
 
@@ -99,6 +102,12 @@ add_filter('admin_init', 'my_general_settings_register_fields');
     {
         $video_subheader = get_option( 'video_subheader', '' );
         echo '<input type="text" class="long-text" id="video_subheader" name="video_subheader" value="' . $video_subheader . '" />';
+    }
+
+    function video_title_html()
+    {
+        $video_title = get_option( 'video_title', '' );
+        echo '<input type="checkbox" id="video_title" name="video_title" value="' . $video_title . '" />';
     }
 
     function map_html()

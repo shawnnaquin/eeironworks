@@ -181,45 +181,77 @@ get_header(); ?>
 	<hr />
 </div>
 
+<?php
+
+    $args = array(
+        'post_type'=>'videos',
+        'orderby' => 'menu_order',
+        'order'     => 'ASC',
+        'posts_per_page'=> -1,
+    );
+
+    $the_query = new WP_Query( $args );
+
+?>
+
+<section class="featured-sections">
+    <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+    	<article class="featured-section-article" >
+
+    		<div class="featured-section-content">
+    		<?php if ( get_option( 'blogname' ) ) : ?>
+    			<h1><?php the_title(); ?></h1>
+			 <?php endif; ?>
+				<div class="featured-section-iframe">
+					<?php the_content(); ?>
+				</div>
+    		</div>
+
+    	</article>
+	<?php endwhile; ?>
+</section>
+
+<?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
+
+<div class="section-divider">
+	<hr />
+</div>
 
 <section class="benefits">
-	<header>
+<!-- 	<header>
 		<h2>Build Foundation based sites, powered by WordPress</h2>
 		<h4>Foundation is the professional choice for designers, developers and teams. <br /> WordPress is by far, <a href="http://trends.builtwith.com/cms">the world's most popular CMS</a> (currently powering 38% of the web).</h4>
 	</header>
 
 	<div class="semantic">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/semantic.svg" alt="semantic">
+		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/semantic.svg" alt="semantic">
 		<h3>Semantic</h3>
 		<p>Everything is semantic. You can have the cleanest markup without sacrificing the utility and speed of Foundation.</p>
 	</div>
 
 	<div class="responsive">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/responsive.svg" alt="responsive">
+		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/responsive.svg" alt="responsive">
 		<h3>Responsive</h3>
 		<p>You can build for small devices first. Then, as devices get larger and larger, layer in more complexity for a complete responsive design.</p>
 
 	</div>
 
 	<div class="customizable">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/customizable.svg" alt="customizable">
+		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/customizable.svg" alt="customizable">
 		<h3>Customizable</h3>
 		<p>You can customize your build to include or remove certain elements, as well as define the size of columns, colors, font size and more.</p>
 
 	</div>
 
 	<div class="professional">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/professional.svg" alt="professional">
+		<img src="<?php // echo get_stylesheet_directory_uri(); ?>/dist/assets/images/demo/professional.svg" alt="professional">
 		<h3>Professional</h3>
 		<p>Millions of designers and developers depend on Foundation. We have business support, training and consulting to help grow your product or service.</p>
 	</div>
 
 	<div class="why-foundation">
 		<a href="/kitchen-sink">See what's in Foundation out of the box →</a>
-	</div>
-
+	</div> -->
 </section>
-
-
 
 <?php get_footer();

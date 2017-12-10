@@ -7,16 +7,45 @@
 .footer {
   @include xy-grid-container;
   @include xy-grid;
-  padding: rem-calc(30) 0;
+  max-width:none;
+  background-color:$space-gray;
+  color:$white;
+  p,a {
+    color: $white;
+  }
+
+  p {
+    display:inline-block;
+    text-align:left;
+  }
+
+  a {
+    transition: color 200ms ease;
+    &:hover {
+      color: $medium-gray;
+    }
+  }
+  .social-button {
+    padding:4px 10px;
+  }
 
   article {
-    @include xy-cell(auto);
-    margin: 0;
+    @include xy-cell(6);
+    padding: rem-calc(30) 0;
+    text-align:center;
   }
 
   ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+  }
+  .copyright {
+    width:100%;
+    margin:0;
+    padding:16px 0;
+    text-align:center;
+    font-size:12px;
+    background-color:$black;
   }
 }
