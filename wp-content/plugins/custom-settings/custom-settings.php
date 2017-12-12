@@ -1,5 +1,4 @@
 <?php
-    require_once 'recaptcha.php';
 /*
 Plugin Name: Custom Settings
 Plugin URI: wordpress codex
@@ -46,35 +45,8 @@ function add_validate() {
     // wp_enqueue_script() syntax, $handle, $src, $deps, $version, $in_footer(boolean)
     wp_enqueue_script( 'plugins', 'https://www.google.com/recaptcha/api.js#asyncload', '', '', false );
 }
-
-// Validate with Captcha
-function validate_form( $result ) {
-
-    $secret = "6LcuBTsUAAAAAIckEpP9X7mlPOd1rE6DB6_JqoTy";
-
-    // empty response
-    $capresponse = null;
-    // check secret key
-    $reCaptcha = new ReCaptcha($secret);
-
-    // if submitted check response
-    if ($_POST["g-recaptcha-response"]) {
-        $capresponse = $reCaptcha->verifyResponse(
-            $_SERVER["REMOTE_ADDR"],
-            $_POST["g-recaptcha-response"]
-        );
-    }
-
-    if ( $capresponse != null && $capresponse->success && $result == '' ) {
-        return '';
-    }
-
-}
-
-add_filter( 'clean_url', 'async_scripts', 11, 1 );
-add_filter ( 'hf_validate_form', 'validate_form');
+add_filter( 'clean_url', 'async_scripts', 10,1 );
 add_action( 'wp_enqueue_scripts', 'add_validate');
-
 
 function my_custom_admin_styles() {
   echo '<style>
