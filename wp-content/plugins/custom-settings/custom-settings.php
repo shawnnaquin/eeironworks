@@ -29,6 +29,9 @@ Author URI: https://wordpress.com
 //     }
 // }
 
+remove_action( 'admin_init', 'A2A_SHARE_SAVE_add_meta_box' );
+remove_action( 'save_post', 'A2A_SHARE_SAVE_meta_box_save' );
+remove_action( 'edit_attachment', 'A2A_SHARE_SAVE_meta_box_save' );
 
 // Async load
 function async_scripts($url) {
@@ -40,13 +43,8 @@ function async_scripts($url) {
         return str_replace( '#asyncload', '', $url )."' async='async' defer='defer";
 }
 
-// Load Captcha API
-function add_validate() {
-    // wp_enqueue_script() syntax, $handle, $src, $deps, $version, $in_footer(boolean)
-    wp_enqueue_script( 'plugins', 'https://www.google.com/recaptcha/api.js#asyncload', '', '', false );
-}
+
 add_filter( 'clean_url', 'async_scripts', 10,1 );
-add_action( 'wp_enqueue_scripts', 'add_validate');
 
 function my_custom_admin_styles() {
   echo '<style>

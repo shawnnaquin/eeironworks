@@ -146,6 +146,52 @@ get_header(); ?>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
 
+<!-- blog -->
+<section class="featured-sections blog">
+    <?php
+        $args = array( 'numberposts' => '3' );
+        $recent_posts = wp_get_recent_posts( $args );
+
+        foreach( $recent_posts as $recent ) {
+
+            // echo get_the_post_thumbnail($recent['ID'], 'thumbnail');
+
+    ?>
+        <article class="featured-section-article no-image">
+            <div class="featured-section-content">
+                <a href="<?php echo get_permalink( $recent['ID'] ); ?>">
+                    <h2><?php echo $recent['post_title']; ?></h2>
+                </a>
+                <small><?php $post_date = get_the_date( 'D M j, Y' ); echo $post_date; ?></small>
+                <p>
+                <?php
+                    $str = $recent['post_excerpt'] ? $recent['post_excerpt'] : $recent['post_content'];
+                    $str2 = wordwrap($str,120,'@@@@@');
+                    $str_final = substr($str2,0,strpos($str2,'@@@@@'));
+                    echo $str_final . '...';
+                ?>
+                </p>
+
+                <a class="small button sites-button" href="<?php echo get_permalink( $recent['ID'] ); ?>" >
+                    Read More <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                </a>
+
+            </div>
+        </article>
+    <?php } ?>
+
+    <article class="featured-section-article no-image ">
+        <div class="featured-section-content">
+            <a class="large button sites-button more" href="<?php echo get_permalink( $recent['ID'] ); ?>" >
+                More Stories!
+            </a>
+        </div>
+    </article>
+
+</section>
+
+<?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
+
 <?php
 
     $args = array(
@@ -238,7 +284,7 @@ get_header(); ?>
 			<div class="section-divider">
 				<hr />
 			</div>
-			<?php echo do_shortcode( '[hf_form slug="contact-ee-iron-works"]' ); ?>
+			<?php echo do_shortcode( '[contact-form-7 id="67" title="Contact form 1"]' ); ?>
 		</div>
 
 	</article>

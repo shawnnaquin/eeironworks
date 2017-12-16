@@ -37,7 +37,7 @@
     }
 
     @include breakpoint(medium) {
-      @include xy-cell(8);
+      @include xy-cell(12);
     }
 
   }
@@ -49,7 +49,7 @@
     }
 
     @include breakpoint(medium) {
-      @include xy-cell(4);
+      @include xy-cell(12);
       margin-top: 1rem;
     }
 

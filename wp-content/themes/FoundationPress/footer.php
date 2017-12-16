@@ -15,9 +15,13 @@
 			<footer class="footer">
 				<article>
 					<h1>EE</h1>
-					<a class="social-button" href="#" target="_blank"><i class="fa fa-facebook"></i></a>
-					<a class="social-button" href="#" target="_blank"><i class="fa fa-instagram"></i></a>
-					<a class="social-button" href="#" target="_blank"><i class="fa fa-twitter"></i></a>
+					<div class="footer-social">
+						<?php echo do_shortcode( '[addtoany buttons="facebook"]' ); ?>
+						<div class="a2a_kit a2a_kit_size_32 a2a_default_style a2a_follow">
+						    <a class="a2a_button_instagram" data-a2a-follow="ericthesmith"></a>
+						</div>
+						<?php echo do_shortcode( '[addtoany buttons="twitter"]' ); ?>
+					</div>
 				</article>
 				<article>
 					<div>

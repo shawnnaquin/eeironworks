@@ -1,0 +1,52 @@
+# Copyright (C) 2017 External URL Featured Image
+# This file is distributed under the same license as the External URL Featured Image package.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: External URL Featured Image 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/dcms-external-url-featured-image\n"
+"POT-Creation-Date: 2017-01-08 12:41-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: includes/class-dcms-external-url-featured-image.php:57
+msgid "External Featured Image"
+msgstr ""
+
+#: includes/html/inc-metabox.php:3
+msgid "Preview"
+msgstr ""
+
+#: includes/html/inc-metabox.php:8
+msgid "No image"
+msgstr ""
+
+#: includes/html/inc-metabox.php:12
+msgid "Remove Image"
+msgstr ""
+
+#: includes/html/inc-metabox.php:47
+msgid "Error URL Image"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "External URL Featured Image"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://decodecms.com"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "This plugin allows to use External URL Images for your posts types, it's compatible with Nelio External Featured Image metadata."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Jhon Marreros Guzmán"
+msgstr ""

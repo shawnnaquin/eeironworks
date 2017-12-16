@@ -11886,6 +11886,7 @@ var Header = {
 
 		$iFrame: (0, _jquery2.default)('.js-iframe'),
 		$spinner: (0, _jquery2.default)('.js-spinner'),
+		$topBar: (0, _jquery2.default)('.top-bar'),
 		scroll: function scroll() {
 			modules.header.scroll();
 		}
@@ -11894,14 +11895,21 @@ var Header = {
 	loadIframe: function loadIframe() {
 		var _this = this;
 
-		this.data.$iFrame.on('load', function () {
+		if (this.data.$iFrame.html()) {
+			this.data.$iFrame.on('load', function () {
 
-			data.$body.addClass(data.loadedClass);
-			data.$spinner = _this.data.$spinner.clone();
-			_this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', function () {
-				_this.data.$spinner.remove();
+				data.$body.addClass(data.loadedClass);
+				data.$spinner = _this.data.$spinner.clone();
+				_this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', function () {
+					_this.data.$spinner.remove();
+				});
 			});
-		});
+		} else {
+			this.data.$topBar.css({
+				'transition-delay': '0.5s'
+			});
+			data.$body.addClass(data.loadedClass);
+		}
 	},
 	scroll: function scroll() {
 		data.scrolled.state = data.$window.scrollTop();

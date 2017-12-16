@@ -2027,11 +2027,13 @@ function get_adjacent_post_link( $format, $link, $in_same_term = false, $exclude
 
 		$date = mysql2date( get_option( 'date_format' ), $post->post_date );
 		$rel = $previous ? 'prev' : 'next';
-
-		$string = '<a href="' . get_permalink( $post ) . '" rel="'.$rel.'">';
+		$prev_fa = $previous ? '<i class="fa fa-long-arrow-left" ></i>&nbsp;' : '' ;
+		$next_fa = !$previous ? '&nbsp;<i class="fa fa-long-arrow-right" ></i>' : '';
+		$string = '<a class="button small sites-button" href="' . get_permalink( $post ) . '" rel="'.$rel.'">';
 		$inlink = str_replace( '%title', $title, $link );
 		$inlink = str_replace( '%date', $date, $inlink );
-		$inlink = $string . $inlink . '</a>';
+
+		$inlink = $string . $prev_fa . $inlink . $next_fa . '</a>';
 
 		$output = str_replace( '%link', $inlink, $format );
 	}
@@ -2699,7 +2701,7 @@ function get_next_comments_link( $label = '', $max_page = 0 ) {
 	 *
 	 * @param string $attributes Attributes for the anchor tag.
 	 */
-	return '<a href="' . esc_url( get_comments_pagenum_link( $nextpage, $max_page ) ) . '" ' . apply_filters( 'next_comments_link_attributes', '' ) . '>'. preg_replace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) .'</a>';
+	return '<a href="' . esc_url( get_comments_pagenum_link( $nextpage, $max_page ) ) . '" ' . apply_filters( 'next_comments_link_attributes', '' ) . '>'. preg_replace('/&([^#])(?![a-z]{1,8};)/i', '&#038;$1', $label) .'<i class="fa fa-long-arrow-right"></i></a>';
 }
 
 /**

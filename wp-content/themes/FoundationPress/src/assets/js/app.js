@@ -54,22 +54,29 @@ let Header = {
 
 		$iFrame: $('.js-iframe'),
 		$spinner: $('.js-spinner'),
+		$topBar: $('.top-bar'),
 		scroll() {
 			modules.header.scroll();
 		}
 	},
 
 	loadIframe() {
+		if ( this.data.$iFrame.html() ) {
+			this.data.$iFrame.on('load', ()=> {
 
-		this.data.$iFrame.on('load', ()=> {
+				data.$body.addClass( data.loadedClass );
+				data.$spinner = this.data.$spinner.clone();
+				this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', ()=> {
+					this.data.$spinner.remove();
+				});
 
-			data.$body.addClass( data.loadedClass );
-			data.$spinner = this.data.$spinner.clone();
-			this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', ()=> {
-				this.data.$spinner.remove();
 			});
-
-		});
+		} else {
+			this.data.$topBar.css({
+				'transition-delay': '0.5s',
+			});
+			data.$body.addClass( data.loadedClass );
+		}
 
 	},
 

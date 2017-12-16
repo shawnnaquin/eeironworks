@@ -395,12 +395,14 @@
 	.featured-section-content {
 		background-color: $white;
 		background-image: none;
+		color: $space-gray;
 		h1 {
 			color:$space-gray;
 		}
 		border:0;
 	}
 }
+
 // Section divider
 .section-divider {
 	@include xy-grid-container;
@@ -453,6 +455,41 @@
 	.why-foundation {
 		@include xy-cell(12);
 		margin-top: 4rem;
+	}
+}
+/* blog
+======================================================================================================================*/
+.blog {
+	small {
+		color:$dark-gray;
+	}
+	p {
+		margin-top:1rem;
+		margin-bottom:1rem;
+	}
+	article {
+		&:nth-child(even) {
+			background-color: rgba($black,0.02);
+			.featured-section-content {
+				background:transparent;
+			}
+		}
+		.button:not(.more) {
+			background: lighten($space-gray,75%);
+			color:$space-gray;
+		}
+	}
+}
+.single article.post {
+	margin-bottom:5rem;
+}
+.single-blog-social {
+	float:left;
+	clear:both;
+	width:100%;
+	margin-bottom:2rem;
+	> div {
+		float:left;
 	}
 }
 /* Contact Form
