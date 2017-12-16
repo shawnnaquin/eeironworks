@@ -13,6 +13,13 @@ get_header(); ?>
 		<header>
 			<h1 class="entry-title"><?php _e( 'File Not Found', 'foundationpress' ); ?></h1>
 		</header>
+		<div class="section-divider">
+			<hr />
+		</div>
+		<?php get_sidebar(); ?>
+		<div class="section-divider">
+			<hr />
+		</div>
 		<div class="entry-content">
 			<div class="error">
 				<p class="bottom"><?php _e( 'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.', 'foundationpress' ); ?></p>
@@ -32,9 +39,11 @@ get_header(); ?>
 				<li><?php _e( 'Click the <a href="javascript:history.back()">Back</a> button', 'foundationpress' ); ?></li>
 			</ul>
 		</div>
-	</article>
+		<div class="section-divider">
+			<hr />
+		</div>
 
- <?php get_sidebar(); ?>
+	</article>
 
 </div>
 

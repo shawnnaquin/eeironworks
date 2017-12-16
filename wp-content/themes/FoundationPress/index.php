@@ -14,13 +14,16 @@
  */
 
 get_header(); ?>
-
 <div class="main-wrap" role="main">
 	<article class="main-content">
+	<?php get_sidebar(); ?>
 	<?php if ( have_posts() ) : ?>
 
 		<?php /* Start the Loop */ ?>
 		<?php while ( have_posts() ) : the_post(); ?>
+			<div class="section-divider">
+				<hr />
+			</div>
 			<?php get_template_part( 'template-parts/content', get_post_format() ); ?>
 		<?php endwhile; ?>
 
@@ -40,9 +43,10 @@ get_header(); ?>
 				<div class="post-next"><?php previous_posts_link( __( 'Newer posts &rarr;', 'foundationpress' ) ); ?></div>
 			</nav>
 		<?php endif; ?>
-
+		<div class="section-divider">
+			<hr />
+		</div>
 	</article>
-	<?php get_sidebar(); ?>
 
 </div>
 

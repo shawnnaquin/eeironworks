@@ -182,7 +182,7 @@ get_header(); ?>
 
     <article class="featured-section-article no-image ">
         <div class="featured-section-content">
-            <a class="large button sites-button more" href="<?php echo get_permalink( $recent['ID'] ); ?>" >
+            <a class="large button sites-button more" href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" >
                 More Stories!
             </a>
         </div>

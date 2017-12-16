@@ -14,9 +14,12 @@ else :
 	$image = get_the_post_thumbnail_url();
 endif;
 ?>
+
+<?php if ($image) : ?>
 	<header class="featured-hero" role="banner" 
 		style="background-image:url('<?php echo $image; ?>');"
 	></header>
+<?php endif; ?>
 
 <div class="main-wrap" role="main">
 <?php // get_sidebar(); ?>
@@ -65,10 +68,13 @@ endif;
 		<?php // do_action( 'foundationpress_post_before_comments' ); ?>
 		<?php // comments_template(); ?>
 		<?php // do_action( 'foundationpress_post_after_comments' ); ?>
+		<br><br>
+		<a class="alt-button large button sites-button more" href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" >
+		    More Stories!
+		</a>
 	</article>
 <?php endwhile;?>
 
 <?php do_action( 'foundationpress_after_content' ); ?>
-
 </div>
 <?php get_footer();

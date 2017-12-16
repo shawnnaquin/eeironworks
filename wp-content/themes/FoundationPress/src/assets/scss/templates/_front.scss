@@ -11,6 +11,12 @@
 		padding-bottom: 6rem;
 	}
 }
+
+.alt-button {
+	background: lighten($space-gray,75%);
+	color:$space-gray;
+}
+
 .spinner {
 	position:absolute;
 	top: calc( 50% - 40px );
@@ -459,7 +465,7 @@
 }
 /* blog
 ======================================================================================================================*/
-.blog {
+.home .blog {
 	small {
 		color:$dark-gray;
 	}
@@ -500,4 +506,23 @@
 	max-width:none;
 	color: $white;
 	background-color: $dark-gray;
+}
+
+input[type],
+textarea {
+	box-shadow:none;
+	&:focus {
+		box-shadow:none;
+	}
+}
+
+.wpcf7-form {
+
+	input:not([type='submit']),
+	textarea {
+		// background-color: $white;
+		&:focus {
+			// background-color: $white;
+		}
+	}
 }
