@@ -11895,14 +11895,47 @@ var Header = {
 	loadIframe: function loadIframe() {
 		var _this = this;
 
-		if (this.data.$iFrame.html()) {
-			this.data.$iFrame.on('load', function () {
+		if ((0, _jquery2.default)('body').hasClass('home')) {
 
+			var playerTwoPlayer = new Vimeo.Player('playertwo', {
+				title: false,
+				byline: false,
+				portrait: false,
+				color: '3a6774',
+				autoplay: false,
+				background: true
+			});
+
+			// console.log('ready');
+
+			playerTwoPlayer.play().then(function () {
+				setTimeout(function () {
+					data.$body.addClass(data.loadedClass);
+					data.$spinner = _this.data.$spinner.clone();
+					_this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', function () {
+						_this.data.$spinner.remove();
+					});
+				}, 2000);
+			}).catch(function (error) {
 				data.$body.addClass(data.loadedClass);
 				data.$spinner = _this.data.$spinner.clone();
 				_this.data.$spinner.on('webkitTransitionEnd transitionend oTransitionEnd otransitionend', function () {
 					_this.data.$spinner.remove();
 				});
+				// switch (error.name) {
+				//     case 'PasswordError':
+				//         // the video is password-protected and the viewer needs to enter the
+				//         // password first
+				//         break;
+
+				//     case 'PrivacyError':
+				//         // the video is private
+				//         break;
+
+				//     default:
+				//         // some other error occurred
+				//         break;
+				// }
 			});
 		} else {
 			this.data.$topBar.css({

@@ -25,7 +25,9 @@ get_header(); ?>
 		  <div class="sk-cube3 sk-cube"></div>
 		</div>
 
-		<iframe class="iframe js-iframe" src="https://player.vimeo.com/video/218861893?title=0&byline=0&portrait=0&color=3a6774&autoplay=1&loop=1&background=1" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        <div data-vimeo-url="https://player.vimeo.com/video/218861893" id="playertwo"></div>
+
+		<!-- <iframe class="iframe js-iframe" src="https://player.vimeo.com/video/218861893?" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> -->
 
 	</div>
 
@@ -275,6 +277,117 @@ get_header(); ?>
 </section>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
+
+<!--         <div class="featured-section-content">
+
+            <ul class="tabs" data-tabs id="example-tabs">
+              <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Tab 1</a></li>
+              <li class="tabs-title"><a data-tabs-target="panel2" href="#panel2">Tab 2</a></li>
+            </ul>
+
+            <div class="tabs-content" data-tabs-content="example-tabs">
+
+              <div class="tabs-panel is-active" id="panel1">
+                <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
+              </div>
+
+              <div class="tabs-panel" id="panel2">
+                <p>Suspendisse dictum feugiat nisl ut dapibus.  Vivamus hendrerit arcu sed erat molestie vehicula. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.  Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
+              </div>
+
+            </div>
+
+        </div> -->
+
+<?php
+
+$args = array(
+    'post_type'=>'tab',
+    'orderby' => 'menu_order',
+    'order'     => 'ASC',
+    'posts_per_page' => -1
+);
+
+$query = new WP_Query($args);
+$q = array();
+
+while ( $query->have_posts() ) :
+    $query->the_post(); 
+    $external = get_post_meta( $post->ID, '_dcms_eufi_img' )[0];
+    $url = get_field('url');
+    $sharing = get_field('sharing_type');
+    // if ( $url ):
+    if ( $external ) :
+        $image = $external;
+    else :
+        $image = get_the_post_thumbnail_url();
+    endif;
+
+    $link = $sharing ? '<a target="_blank" href="' . $url . '"class="feature-image-link"><i class="fa fa-' . $sharing . '"></i></a>' : '';
+    $a = '<button class="featured-image" data-open="featured-image-tab" style="background-image: url(' . $image . '">' . $link . '</button>';
+    $categories = get_the_category();
+    // $title = get_the_title();
+?>
+<?php
+    foreach ( $categories as $key=>$category ) :
+        $b = $category->name;
+?>
+<?php
+    endforeach;
+    $q[$b][] = $a; // Create an array with the category names and post titles
+?>
+
+<?php
+
+endwhile;
+wp_reset_postdata();
+
+?>
+
+<section class="featured-sections photo-tab">
+    <article class="featured-section-article no-image" >
+        <div class="featured-section-content">
+            <ul class="tabs" data-tabs id="example-tabs">
+<?php
+foreach ($q as $key=>$values) :
+
+?>
+                <li class="tabs-title">
+                    <a href="#tabs-panel-<?php echo $key; ?>" class="" aria-selected="true" >
+                        <h5><?php echo $key  ?></h5>
+                    </a>
+                </li>
+<?php
+endforeach;
+?>
+            </ul>
+            <div class="tabs-content" data-tabs-content="example-tabs">
+                <?php
+                foreach ($q as $key=>$values) :
+                    $count = 0;
+                ?>
+                <div class="tabs-panel <?php echo $is_active; ?>" id="tabs-panel-<?php echo $key; ?>">
+                <?php
+                    foreach ($values as $value) :
+                        if ( $count < 6 ) {
+                            // echo $count;
+                ?>
+                <?php
+                                echo $value;
+                ?>
+                <?php
+                            $count++;
+                        }
+                    endforeach;
+                ?>
+                </div>
+                <?php
+                endforeach;
+                ?>
+            </div>
+        </div>
+    </article>
+</section>
 
 <section class="featured-sections">
 	<article class="featured-section-article no-image" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">

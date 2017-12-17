@@ -13,7 +13,21 @@
  * @since FoundationPress 1.0.0
  */
 
-get_header(); ?>
+get_header(); 
+$external = get_post_meta( $post->ID, '_dcms_eufi_img' )[0];
+if ( $external ) :
+	$image = $external;
+else :
+	$image = get_the_post_thumbnail_url();
+endif;
+?>
+
+<?php if ($image) : ?>
+	<header class="featured-hero" role="banner" 
+		style="background-image:url('<?php echo $image; ?>');"
+	></header>
+<?php endif; ?>
+
 <div class="main-wrap" role="main">
 	<article class="main-content">
 	<?php get_sidebar(); ?>

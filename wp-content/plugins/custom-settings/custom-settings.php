@@ -33,6 +33,9 @@ remove_action( 'admin_init', 'A2A_SHARE_SAVE_add_meta_box' );
 remove_action( 'save_post', 'A2A_SHARE_SAVE_meta_box_save' );
 remove_action( 'edit_attachment', 'A2A_SHARE_SAVE_meta_box_save' );
 
+// wp_enqueue_script( 'vimeo', $src, $deps, $ver, $in_footer );
+wp_enqueue_script( 'script', 'https://player.vimeo.com/api/player.js', true);
+
 // Async load
 function async_scripts($url) {
     if ( strpos( $url, '#asyncload') === false )
