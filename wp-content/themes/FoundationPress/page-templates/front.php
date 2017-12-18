@@ -3,7 +3,7 @@
 Template Name: Front
 */
 get_header(); ?>
-
+<!-- // test -->
 <header class="front-hero" role="banner">
 
 	<div class="marketing">
