@@ -27,7 +27,7 @@ define('DB_NAME', 'eeironworks');
 define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'admin');
+define('DB_PASSWORD', '**62/song/TIME/radio/76**');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -37,7 +37,7 @@ define('DB_CHARSET', 'utf8mb4');
 
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
-
+// mysql **62/song/TIME/radio/76**
 /**#@+
  * Authentication Unique Keys and Salts.
  *
