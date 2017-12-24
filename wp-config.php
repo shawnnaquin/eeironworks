@@ -39,6 +39,9 @@ define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
+// github token
+// fe2ea48949f97bc0271f8606231bdec01b10bd09
+
  * Authentication Unique Keys and Salts.
  *
  * Change these to different unique phrases!

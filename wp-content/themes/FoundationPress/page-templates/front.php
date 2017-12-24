@@ -115,7 +115,7 @@ get_header(); ?>
 	    	    		<?php
 	    	    			the_post_thumbnail( 'large', array('class' => 'orbit-image') );
 	    	    			$content = get_the_content();
-	    	    			if ($content):
+	    	    			if ($content) :
 	    	    		?>
     	    		    <figcaption class="orbit-caption">
     	    		    	<?php echo wp_filter_nohtml_kses( $content ); ?>
