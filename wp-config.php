@@ -1,5 +1,5 @@
 <?php
-
+/// TEST ///
 /**
  * The base configuration for WordPress
  *
@@ -40,7 +40,9 @@ define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
 // github token
-// 0a94905a492cc69bf0c269075a1eca4d47e044d0
+/// 0a94905a492cc69bf0c269075a1eca4d47e044d0
+// AKIAIRTLWUNHQGOS7R3A
+// FTY064hwYrT3nMDGWdXClsxVGuXfWfknGHw08y9/
 
  * Authentication Unique Keys and Salts.
  *
