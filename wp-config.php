@@ -40,7 +40,7 @@ define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
 // github token
-// fe2ea48949f97bc0271f8606231bdec01b10bd09
+// 0a94905a492cc69bf0c269075a1eca4d47e044d0
 
  * Authentication Unique Keys and Salts.
  *
