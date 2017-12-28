@@ -39,9 +39,6 @@ define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
-// github token
-
-// 352391905979202120198bc27045a296d681f43b
 // AKIAIRTLWUNHQGOS7R3A
 // FTY064hwYrT3nMDGWdXClsxVGuXfWfknGHw08y9/
 
