@@ -1,5 +1,5 @@
 <?php
-/// TEST12 ///
+
 /**
  * The base configuration for WordPress
  *
@@ -30,18 +30,15 @@ define('DB_USER', 'root');
 define('DB_PASSWORD', '**62/song/TIME/radio/76**');
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', '34.195.241.173');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8mb4');
 
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
-// mysql **62/song/TIME/radio/76**
-/**#@+
-// AKIAJZR62757TXRHA2IQ
-// 6z4fGuZuAIHWYiuVooNcuH8FMw75FQvUEyRHp9Gf
 
+/*
  * Authentication Unique Keys and Salts.
  *
  * Change these to different unique phrases!

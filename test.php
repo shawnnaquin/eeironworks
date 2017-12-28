@@ -3,9 +3,9 @@
 # $ php -f db-connect-test.php
 $dbname = 'eeironworks';
 $dbuser = 'root';
-// $dbpass = '**62/song/TIME/radio/76**';
-$dbpass = '';
-$dbhost = 'ec2-34-195-241-173.compute-1.amazonaws.com';
+$dbpass = '**62/song/TIME/radio/76**';
+// $dbpass = '';
+$dbhost = '34.195.241.173';
 $link = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Unable to Connect to '$dbhost'");
 mysqli_select_db($link, $dbname) or die("Could not open the db '$dbname'");
 $test_query = "SHOW TABLES FROM $dbname";
