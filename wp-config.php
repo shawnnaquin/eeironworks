@@ -41,7 +41,7 @@ define('DB_COLLATE', '');
 /**#@+
 // github token
 
-// 26436592c4ca97fd243987cdb9e22ecd8e14dd34
+// b820e7299149f6267944a2d99c1b86050b46b2d0
 // AKIAIRTLWUNHQGOS7R3A
 // FTY064hwYrT3nMDGWdXClsxVGuXfWfknGHw08y9/
 
