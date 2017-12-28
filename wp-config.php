@@ -39,8 +39,8 @@ define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
-// AKIAIRTLWUNHQGOS7R3A
-// FTY064hwYrT3nMDGWdXClsxVGuXfWfknGHw08y9/
+// AKIAJZR62757TXRHA2IQ
+// 6z4fGuZuAIHWYiuVooNcuH8FMw75FQvUEyRHp9Gf
 
  * Authentication Unique Keys and Salts.
  *
