@@ -1,5 +1,5 @@
 <?php
-/// TEST45 ///
+/// TEST5 ///
 /**
  * The base configuration for WordPress
  *
