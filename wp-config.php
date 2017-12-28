@@ -39,6 +39,7 @@ define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
+// 1c5e8b44b3d2d20c62a3010ab84a40b19c6b4b38
 // AKIAJZR62757TXRHA2IQ
 // 6z4fGuZuAIHWYiuVooNcuH8FMw75FQvUEyRHp9Gf
 
