@@ -40,7 +40,7 @@ define('DB_COLLATE', '');
 // mysql **62/song/TIME/radio/76**
 /**#@+
 // github token
-/// 0a94905a492cc69bf0c269075a1eca4d47e044d0
+// 26436592c4ca97fd243987cdb9e22ecd8e14dd34
 // AKIAIRTLWUNHQGOS7R3A
 // FTY064hwYrT3nMDGWdXClsxVGuXfWfknGHw08y9/
 
