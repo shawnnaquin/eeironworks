@@ -120,7 +120,7 @@ get_header(); ?>
     	    		    <figcaption class="orbit-caption">
     	    		    	<?php echo wp_filter_nohtml_kses( $content ); ?>
     	    		    </figcaption>
-	    	    		<? endif; ?>
+	    	    		<?php endif; ?>
     	    		  </figure>
     	    		</li>
     	    	<?php endwhile; ?>
