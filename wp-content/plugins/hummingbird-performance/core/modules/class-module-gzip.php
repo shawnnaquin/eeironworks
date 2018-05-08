@@ -31,9 +31,9 @@ class WP_Hummingbird_Module_GZip extends WP_Hummingbird_Module_Server {
 			// Would be nice to user get_home_url(), but website is not accessible during plugin activation
 			// and curl times out.
 			//'HTML'       => add_query_arg( 'avoid-minify', 'true', get_home_url() ),
-			'HTML'       => wphb_plugin_url() . 'core/modules/dummy/dummy-html.html',
-			'JavaScript' => wphb_plugin_url() . 'core/modules/dummy/dummy-js.js',
-			'CSS'        => wphb_plugin_url() . 'core/modules/dummy/dummy-style.css',
+			'HTML'       => WPHB_DIR_URL . 'core/modules/dummy/dummy-php.php',
+			'JavaScript' => WPHB_DIR_URL . 'core/modules/dummy/dummy-js.js',
+			'CSS'        => WPHB_DIR_URL . 'core/modules/dummy/dummy-style.css',
 		);
 
 		$results = array();
@@ -44,7 +44,12 @@ class WP_Hummingbird_Module_GZip extends WP_Hummingbird_Module_Server {
 				require_once( ABSPATH . WPINC . '/class-simplepie.php' );
 			}
 
-			$result = new SimplePie_File( $file, 10, 5, null, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36' );
+			$headers = array(
+				'Content-Type' => 'text/plain',
+			);
+			$useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36';
+
+			$result = new SimplePie_File( $file, 10, 5, $headers, $useragent );
 
 			$headers = $result->headers;
 			$results[ $type ] = false;
@@ -56,12 +61,17 @@ class WP_Hummingbird_Module_GZip extends WP_Hummingbird_Module_Server {
 		}
 
 		// Will only trigger on 're-check status' button click.
-		if ( $try_api && $check_api ) {
+		if ( $try_api || $check_api ) {
 			// Get the API results.
-			$api = wphb_get_api();
+			$api = WP_Hummingbird_Utils::get_api();
 			$api_results = $api->performance->check_gzip();
 			$api_results = get_object_vars( $api_results );
 			foreach ( $files as $type  => $file ) {
+				// If already true, do not overwrite with check.
+				if ( true === $results[ $type ] ) {
+					continue;
+				}
+
 				$index = strtolower( $type );
 				if ( ! isset( $api_results[ $index ]->response_error )
 					&& ( isset( $api_results[ $index ] ) && true === $api_results[ $index ] )
@@ -127,6 +137,7 @@ gzip_disable  "MSIE [1-6]\.(?!.*SV1)";';
 	public function get_apache_code() {
 		return '
 <IfModule mod_deflate.c>
+	SetOutputFilter DEFLATE
     <IfModule mod_setenvif.c>
         <IfModule mod_headers.c>
             SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding

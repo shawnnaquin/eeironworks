@@ -4,11 +4,11 @@ Version:
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Contributors: WPMUDEV
-Tags: Optimization, Caching, Speed, Performance, Faster, PageSpeed, Gzip, Compression, Minify, Minification, Cloudflare, Gravatar
+Tags: Optimization, Caching, Speed, Performance, Faster, PageSpeed, Gzip, Compression, Minify, Minification, Cloudflare, Gravatar, Asset Optimization
 Requires at least: 4.6
-Tested up to: 4.9
+Tested up to: 4.9.5
 Requires PHP: 5.2
-Stable tag: 1.7.0.3
+Stable tag: 1.8.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ Make your site load faster with file compression, minification and a complete se
 = Features Available in Hummingbird Include: =
 
 * Performance Reports - Pro tips for running your site at super speed
-* Minification - Position, minify and combine files for top performance
+* Asset Optimization - Position, minify and combine files for top performance
 * Caching Suite - Load pages faster with full-page, Gravatar and browser cache tools
 * GZIP Compression - Blazing fast HTML, JavaScript, and stylesheet transfer
 
@@ -39,7 +39,10 @@ Hummingbird even has one-click improvements for quickly optimizing performance.
 ★★★★★ <br>
 “Hummingbird took me from 32 to 84 on Google page speed plus made my site 50% faster on GTmetrix!” - <a href="https://premium.wpmudev.org/profile/nicolastergiopoulos">Nicolas</a>
 
-= Minification =
+★★★★★ <br>
+“I just built a real bloated sack of crap of a WP site, and after configuring Hummingbird and letting it do its thing, the site is actually *fast* — much faster than it has any right to be...I’m impressed.” - <a href="https://wordpress.org/support/topic/better-than-i-deserve-2/">Cacarr</a>
+
+= Asset Optimization =
 
 Did you know that the more files you add to your site’s the header, the slower it will load? With Hummingbird, you can easily customize the load position of your files to increase your page speed.
 
@@ -77,9 +80,9 @@ Yes! Hummingbird is built to take full advantage of Cloudflare features. Just pl
 = Does Hummingbird work with WooCommerce? =
 Yes! Hummingbird works great with ecommerce plugins like WooCommerce and MarketPress. For best results, when configuring full-page cache, follow the WooCommerce recommended cache settings. Hummingbird will exclude the cart, my account and checkout pages to keep content dynamic.
 
-= Somebody help! I turned on Minification and it broke my site!? =
+= Somebody help! I turned on Asset Optimization and it broke my site!? =
 
-Minification is a great way to speed up your site but moving, combining and rearranging files can also mess with styling and break functionality. We recommend making incremental changes and testing your site as you go so you can undo the changes if something breaks. And remember, don’t panic. If something goes wrong you can start over with the click of a button :)
+Asset Optimization is a great way to speed up your site but moving, combining and rearranging files can also mess with styling and break functionality. We recommend making incremental changes and testing your site as you go so you can undo the changes if something breaks. And remember, don’t panic. If something goes wrong you can start over with the click of a button :)
 
 
 
@@ -87,7 +90,7 @@ Minification is a great way to speed up your site but moving, combining and rear
 
 1. Scan your site for optimization tips and tricks.
 2. Use the complete suite of cache tools to speed up load times.
-3. Minification lets you combine and reposition files.
+3. Asset Optimization lets you combine and reposition files.
 4. Use suggestions to make improvments and speed up your site.
 
 
@@ -102,6 +105,106 @@ Minification is a great way to speed up your site but moving, combining and rear
 
 
 == Changelog ==
+
+= 1.8.2 ( 2018-04-24 ) =
+- New: System Information module in Advanced Tools
+- Enhance: Improve caching notices
+- Enhance: Remove clear cache notice in Asset Optimizztion when re-checking files
+- Enhance: Asset Optimization performance improvements
+- Enhance: Asset Optimization log option in multisite moved to network settings
+- Fix: Performance test previous score not updated
+- Fix: Links in performance reports in multisite are not always redirecting to correct page
+- Fix: PHP 5.2 compatibility
+- Fix: Various UI fixes and improvements
+- Fix: Browser caching changes not reflected when selecting LiteSpeed server
+- Fix: Asset Optimization incorrect states for some files
+- Fix: CDN option changing state during a new scan
+- Fix: Remove wphb_minify_clear_files cron task when Asset Optimization module is not enabled
+- Fix: Warnings during ignore performance report
+
+= 1.8.1 ( 2018-04-11 ) =
+- New: Option to auto clear cache on plugin/theme update
+- New: Option to hide all notices
+- New: Option to show clear cache button on the admin bar
+- Enhance: Various performance improvements and tweaks
+- Enhance: Removed duplicate queries
+- Enhance: Optimize database writes/reads
+- Enhance: Keep compression settings when switching from advanced to basic view in asset optimization
+- Enhance: Javascript code optimization
+- Enhance: Improve WP_CACHE detection to avoid PHP warnings on some configurations
+- Enhance: Increased expiry time for files in asset optimization module
+- Fix: Remove RSS feeds from page caching
+- Fix: Empty exclusion rules in page cache settings were halting all page caching
+- Fix: Publish changes button not working after bulk updates
+- Fix: Page caching exclusion rules will now only escape the dot in the file extension (if present)
+- Fix: Product page type not showing in page caching settings
+
+= 1.8.0.4 ( 2018-03-14 ) =
+- Fix: API spam issue
+- Fix: Performance scans not returning any results on some hosts
+- Fix: High CPU usage with wphb-check-cf checks
+
+= 1.8.0.3 ( 2018-03-13 ) =
+- Enhance: Better settings upgrade on multisite installs
+- Fix: Scheduled performance reports stuck on a loop
+
+= 1.8.0.2 ( 2018-03-08 ) =
+- Fix: Cached with Hummingbird comment shows on top of the page
+
+= 1.8.0.1 ( 2018-03-07 ) =
+- Fix: Missing share-ui library
+
+= 1.8.0 ( 2018-03-07 ) =
+- New: Advanced tools
+- New: Option to remove query strings from static resources
+- New: Option to remove Emoji
+- New: Option to add critical CSS
+- New: Link to Hummingbird docs on the plugin page
+- New: Page caching module can now cache 404 pages
+- New: RSS feed cache options
+- New: Clear cache button on specific pages/posts
+- New: Database cleanup module
+- New: Prefetch DNS
+- New: Option to ignore performance reports
+- Enhance: Refactored plugin code to reduce number of errors and collisions with third party plugins
+- Enhance: Add links to docs on the plugin page
+- Enhance: Minification renamed to Asset Optimization
+- Enhance: Minification logs are now stored in wphb-logs instead of wphb-cache folder
+- Fix: CDN being enabled from minification scans on subsites in multinetwork installs
+- Fix: Default page caching exclusion rules regex syntax error
+- Fix: Clear cache notice clearing minification settings
+- Fix: Gzip not activating on Apache even if mod_deflate is installed on host
+
+= 1.7.2 ( 2018-02-06 ) =
+- New: Minification logging
+- New: Performance reports for subsites
+- Enhance: PHP 7.2 compatibility
+- Enhance: Better support for installs where SSH of FTP filesystem methods are used
+- Enhance: Texts in tooltips and notices in minification module
+- Enhance: Improve dashboard performance module UI
+- Enhance: Page caching will now add die() to the header of cached files and logs to improve security
+- Enhance: Better integration with Divi theme
+- Enhance: Minification UI
+- Enhance: Uptime UI
+- Fix: Page caching will not be halted forever if minification scan fails to finish
+- Fix: Minification not enqueuing some scripts correctly (better support for Google maps, Google reCAPTCHA)
+- Fix: Page cache not updated when comments added on multisite subdirectory installs
+- Fix: Layout issues on IE11
+- Fix: Hummingbird causing Internal server 500 error on some hosts
+- Fix: Typos on browser caching page and membership modal
+
+= 1.7.1 ( 2018-01-15 ) =
+- New: Download log button in page caching module
+- New: Minification screen has been split into beginner and advanced views
+- New: Minification advanced view allows manipulations with jquery, jquery-core and jquery-migrate files
+- Enhance: Page caching module checking for wp-content directory and wp-config.php file
+- Enhance: Hummingbird will convert any path to regex expression in exclusion rules in page caching module
+- Enhance: Compatibility with Bedrock
+- Enhance: Detection and handling of WP_CACHE constant in wp-config.php file
+- Enhance: More informative tooltips for caching modules
+- Fix: Minification not always correctly detecting when HTTP/2 is used
+- Fix: Cloudflare integration shows empty zone when website domain includes www
+- Fix: Notices during page/post edit when page caching is active
 
 = 1.7.0.3 ( 2017-11-14 ) =
 - New: Debugging option for page caching

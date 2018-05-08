@@ -1,8 +1,4 @@
 <?php
-/**
- * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.1.2
- */
 
 	$links = array(
 		0	=>	array(
@@ -54,7 +50,7 @@
 					<h4><?php _e('Support forum', 'wonderm00ns-simple-facebook-open-graph-tags'); ?>:</h4>
 					<p><a href="https://wordpress.org/support/plugin/wonderm00ns-simple-facebook-open-graph-tags" target="_blank">WordPress.org</a></p>
 					<h4><?php _e('Premium technical support or custom WordPress development', 'wonderm00ns-simple-facebook-open-graph-tags'); ?>:</h4>
-					<p id="webdadoslink"><a href="https://www.webdados.pt/contactos/<?php echo esc_attr($out_link_utm); ?>" title="<?php echo esc_attr(sprintf(__('Please contact %s', 'wonderm00ns-simple-facebook-open-graph-tags'), 'Webdados')); ?>" target="_blank"><img src="<?php echo plugins_url('webdados.png', __FILE__); ?>"/></a></p>
+					<p id="webdadoslink"><a href="https://www.webdados.pt/contactos/<?php echo esc_attr($out_link_utm); ?>" title="<?php echo esc_attr( sprintf( __( 'Please contact %s', 'wonderm00ns-simple-facebook-open-graph-tags' ), 'Webdados' ) ); ?>" target="_blank"><img src="<?php echo plugins_url( 'webdados.svg', __FILE__ ); ?>" width="200"/></a></p>
 					<h4><?php _e('Please rate our plugin at WordPress.org', 'wonderm00ns-simple-facebook-open-graph-tags'); ?>:</h4>
 					<a href="https://wordpress.org/support/view/plugin-reviews/wonderm00ns-simple-facebook-open-graph-tags?filter=5#postform" target="_blank" style="text-align: center; display: block;">
 						<div class="star-rating"><div class="star star-full"></div><div class="star star-full"></div><div class="star star-full"></div><div class="star star-full"></div><div class="star star-full"></div></div>

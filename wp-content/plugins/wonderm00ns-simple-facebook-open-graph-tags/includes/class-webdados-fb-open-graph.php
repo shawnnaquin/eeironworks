@@ -1,8 +1,4 @@
 <?php
-/**
- * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.1.2
- */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -72,6 +68,8 @@ class Webdados_FB {
 			'fb_title_show_schema' => 1,
 			'fb_desc_show_schema' => 1,
 			'fb_image_show_schema' => 1,
+			'fb_author_show_schema' => 1,
+			'fb_article_dates_show_schema' => 1,
 			'fb_publisher_show_schema' => 1,
 			//SEO
 			//...
@@ -106,6 +104,7 @@ class Webdados_FB {
 			'fb_type_schema_homepage'			=>	'trim',
 			'fb_type_schema_post'				=>	'trim',
 			'fb_article_dates_show'				=>	'intval',
+			'fb_article_dates_show_schema'		=>	'intval',
 			'fb_article_sections_show'			=>	'intval',
 			'fb_publisher_show'					=>	'intval',
 			'fb_publisher'						=>	'trim',
@@ -114,6 +113,7 @@ class Webdados_FB {
 			'fb_publisher_show_twitter'			=>	'intval',
 			'fb_publisher_twitteruser'			=>	'trim',
 			'fb_author_show'					=>	'intval',
+			'fb_author_show_schema'				=>	'intval',
 			'fb_author_show_meta'				=>	'intval',
 			'fb_author_show_linkrelgp'			=>	'intval',
 			'fb_author_show_twitter'			=>	'intval',

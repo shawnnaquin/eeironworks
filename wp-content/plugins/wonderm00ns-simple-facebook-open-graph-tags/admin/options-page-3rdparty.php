@@ -1,8 +1,4 @@
 <?php
-/**
- * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.1.2
- */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -189,6 +185,8 @@ global $webdados_fb;
 						<tr>
 							<td colspan="2" class="info">
 								- <?php _e('Recommended if you set large thumbnails for Product Categories and want to use them as Open Graph Images on category listing pages', 'wonderm00ns-simple-facebook-open-graph-tags'); ?>
+								<br/>
+								- <?php _e('This setting also applies to brand pages if WooCommerce Brands is installed', 'wonderm00ns-simple-facebook-open-graph-tags'); ?>
 							</td>
 						</tr>
 	

@@ -5,23 +5,38 @@
 class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 
 	/**
+	 * Check if .htaccess is written by the module.
+	 *
+	 * @var bool $htaccess_written
+	 */
+	private $htaccess_written = false;
+
+	/**
+	 * Gzip status array.
+	 *
+	 * @since 1.8
+	 *
+	 * @var array $status
+	 */
+	private $status = array();
+
+	/**
 	 * Overwrites parent class render_header method.
 	 *
 	 * Renders the template header that is repeated on every page.
 	 * From WPMU DEV Dashboard
 	 */
 	public function render_header() {
-
-		if ( isset( $_GET['htaccess-error'] ) ) {
-			$this->admin_notices->show( 'error', __( 'Hummingbird could not update or write your .htaccess file. Please, make .htaccess writable or paste the code yourself.', 'wphb' ), 'error', true );
+		if ( isset( $_GET['htaccess-error'] ) ) { // Input var ok.
+			$this->admin_notices->show( 'error', __( 'Hummingbird could not update or write your .htaccess file. Please, make .htaccess writable or paste the code yourself.', 'wphb' ), 'error' );
 		}
 
-		if ( isset( $_GET['gzip-enabled'] ) ) {
-			$this->admin_notices->show( 'updated', __( 'Gzip enabled. Your .htaccess file has been updated', 'wphb' ), 'success', true );
+		if ( isset( $_GET['gzip-enabled'] ) ) { // Input var ok.
+			$this->admin_notices->show( 'updated', __( 'Gzip enabled. Your .htaccess file has been updated', 'wphb' ), 'success' );
 		}
 
-		if ( isset( $_GET['gzip-disabled'] ) ) {
-			$this->admin_notices->show( 'updated', __( 'Gzip disabled. Your .htaccess file has been updated', 'wphb' ), 'error', true );
+		if ( isset( $_GET['gzip-disabled'] ) ) { // Input var ok.
+			$this->admin_notices->show( 'updated', __( 'Gzip disabled. Your .htaccess file has been updated', 'wphb' ), 'error' );
 		}
 
 		parent::render_header();
@@ -33,24 +48,24 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 	 * @since 1.7.0
 	 */
 	public function on_load() {
-		if ( ! current_user_can( wphb_get_admin_capability() ) ) {
-			return;
-		}
+		$this->htaccess_written = WP_Hummingbird_Module_Server::is_htaccess_written( 'gzip' );
+		$this->status = WP_Hummingbird_Utils::get_status( 'gzip' );
 
 		$redirect = false;
 		$enabled = false;
 		$disabled = false;
 
-		if ( isset( $_GET['enable'] ) ) {
+		if ( isset( $_GET['enable'] ) ) { // Input var ok.
 			// Enable caching in htaccess (only for apache servers).
-			$result = wphb_save_htaccess( 'gzip' );
+			$result = WP_Hummingbird_Module_Server::save_htaccess( 'gzip' );
 			if ( $result ) {
 				$redirect = true;
 				$enabled = true;
+
 				// Clear saved status.
-				wphb_clear_gzip_cache();
-				// Update cache status.
-				wphb_get_gzip_status();
+				/* @var WP_Hummingbird_Module_GZip $gzip_module */
+				$gzip_module = WP_Hummingbird_Utils::get_module( 'gzip' );
+				$gzip_module->clear_cache();
 			} else {
 				$redirect_to = remove_query_arg( array( 'run', 'enable', 'disable' ) );
 				$redirect_to = add_query_arg( 'htaccess-error', true, $redirect_to );
@@ -59,16 +74,17 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 			}
 		}
 
-		if ( isset( $_GET['disable'] ) ) {
+		if ( isset( $_GET['disable'] ) ) { // Input var ok.
 			// Disable caching in htaccess (only for apache servers).
-			$result = wphb_unsave_htaccess( 'gzip' );
+			$result = WP_Hummingbird_Module_Server::unsave_htaccess( 'gzip' );
 			if ( $result ) {
 				$redirect = true;
 				$disabled = true;
+
 				// Clear saved status.
-				wphb_clear_gzip_cache();
-				// Update cache status.
-				wphb_get_gzip_status();
+				/* @var WP_Hummingbird_Module_GZip $gzip_module */
+				$gzip_module = WP_Hummingbird_Utils::get_module( 'gzip' );
+				$gzip_module->clear_cache();
 			} else {
 				$redirect_to = remove_query_arg( array( 'run', 'enable', 'disable' ) );
 				$redirect_to = add_query_arg( 'htaccess-error', true, $redirect_to );
@@ -77,9 +93,9 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 			}
 		}
 
-		if ( isset( $_GET['run'] ) ) {
+		if ( isset( $_GET['run'] ) ) { // Input var ok.
 			// Force a refresh of the data.
-			wphb_get_status_from_api( 'gzip' );
+			WP_Hummingbird_Utils::get_status( 'gzip', true );
 			$redirect = true;
 		}
 
@@ -122,8 +138,8 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 	 * Render content for display.
 	 */
 	protected function render_inner_content() {
-		$server_name = wphb_get_server_type();
-		$server_type = array_search( $server_name, wphb_get_servers(), true );
+		$server_name = WP_Hummingbird_Module_Server::get_server_type();
+		$server_type = array_search( $server_name, WP_Hummingbird_Module_Server::get_servers(), true );
 		$this->view( $this->slug . '-page', array(
 			'server_type' => $server_type,
 			'server_name' => $server_name,
@@ -134,20 +150,15 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 	 * Render gzip summary metabox.
 	 */
 	public function gzip_summary_metabox() {
-		$status = wphb_get_gzip_status();
-
-		$htaccess_written = wphb_is_htaccess_written( 'gzip' );
 		$external_problem = false;
-		if ( $htaccess_written ) {
-			if ( ! is_array( $status ) || ( is_array( $status ) && 3 !== count( $status ) ) || in_array( false, $status, true ) ) {
-				// There must be another plugin/server config that is setting its own gzip stuff.
-				$external_problem = true;
-			}
+		if ( $this->htaccess_written && ( 3 !== count( $this->status ) || in_array( false, $this->status, true ) ) ) {
+			// There must be another plugin/server config that is setting its own gzip stuff.
+			$external_problem = true;
 		}
-		$inactive_types = wphb_get_number_of_issues( 'gzip' );
+		$inactive_types = WP_Hummingbird_Utils::get_number_of_issues( 'gzip', $this->status );
 
 		$this->view( 'gzip/summary-meta-box', array(
-			'status'           => $status,
+			'status'           => $this->status,
 			'external_problem' => $external_problem,
 			'inactive_types'   => $inactive_types,
 		));
@@ -159,8 +170,7 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 	public function gzip_summary_metabox_header() {
 		$recheck_url = add_query_arg( 'run', 'true' );
 		$recheck_url = remove_query_arg( 'htaccess-error', $recheck_url );
-		$status = wphb_get_gzip_status();
-		$full_enabled = array_sum( $status ) === 3;
+		$full_enabled = array_sum( $this->status ) === 3;
 		$this->view( 'gzip/summary-meta-box-header', array(
 			'recheck_url'  => $recheck_url,
 			'title'        => __( 'Summary', 'wphb' ),
@@ -174,16 +184,8 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 	 * @return bool
 	 */
 	private function _gzip_already_activated_in_server() {
-		$status = wphb_get_gzip_status();
-		if ( ! is_array( $status ) ) {
-			$status = array();
-		}
-
-		$all_types_compressed = array_sum( $status ) === 3;
-		$htaccess_written_by_hummingbird = wphb_is_htaccess_written( 'gzip' );
-
 		$result = false;
-		if ( $all_types_compressed && ! $htaccess_written_by_hummingbird ) {
+		if ( 3 === array_sum( $this->status ) && ! $this->htaccess_written ) {
 			// Server had already gzip activated, Hummingbird did nothing.
 			$result = true;
 		}
@@ -204,19 +206,20 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 			'run'     => 'true',
 			'disable' => 'true',
 		));
-		$status = wphb_get_gzip_status();
-		$full_enabled = array_sum( $status ) === 3;
+
+		$full_enabled = array_sum( $this->status ) === 3;
 		$snippets = array(
-			'apache'    => wphb_get_code_snippet( 'gzip', 'apache' ),
-			'litespeed' => wphb_get_code_snippet( 'gzip', 'LiteSpeed' ),
-			'nginx'     => wphb_get_code_snippet( 'gzip', 'nginx' ),
-			'iis'       => wphb_get_code_snippet( 'gzip', 'iis' ),
-			'iis-7'     => wphb_get_code_snippet( 'gzip', 'iis-7' ),
+			'apache'    => WP_Hummingbird_Module_Server::get_code_snippet( 'gzip', 'apache' ),
+			'litespeed' => WP_Hummingbird_Module_Server::get_code_snippet( 'gzip', 'LiteSpeed' ),
+			'nginx'     => WP_Hummingbird_Module_Server::get_code_snippet( 'gzip', 'nginx' ),
+			'iis'       => WP_Hummingbird_Module_Server::get_code_snippet( 'gzip', 'iis' ),
 		);
 		$htaccess_error = false;
-		if ( isset( $_GET['htaccess-error'] ) ) {
+		if ( isset( $_GET['htaccess-error'] ) ) { // Input var ok.
 			$htaccess_error = true;
 		}
+
+		$htaccess_writable = WP_Hummingbird_Module_Server::is_htaccess_writable();
 
 		$recheck_url = add_query_arg( 'run', 'true' );
 		$recheck_url = remove_query_arg( 'htaccess-error', $recheck_url );
@@ -225,10 +228,12 @@ class WP_Hummingbird_GZIP_Page extends WP_Hummingbird_Admin_Page {
 			'enable_link'         => $enable_link,
 			'disable_link'        => $disable_link,
 			'show_enable_button'  => $show_enable_button,
-			'gzip_server_type'    => wphb_get_server_type(),
+			'gzip_server_type'    => WP_Hummingbird_Module_Server::get_server_type(),
 			'full_enabled'        => $full_enabled,
 			'recheck_url'         => $recheck_url,
 			'htaccess_error'      => $htaccess_error,
+			'htaccess_writable'   => $htaccess_writable,
+			'htaccess_written'    => $this->htaccess_written,
 		));
 	}
 

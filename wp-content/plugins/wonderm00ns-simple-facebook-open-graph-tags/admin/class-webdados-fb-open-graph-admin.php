@@ -1,8 +1,4 @@
 <?php
-/**
- * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.1.2
- */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -310,7 +306,7 @@ class Webdados_FB_Admin {
 				if ( $screen = get_current_screen() ) {
 					if ( $screen->parent_base=='edit' && $screen->base=='post' ) {
 						global $post;
-						switch ( $_GET['wd_fb_og_status'] ) {
+						switch ( intval( $_GET['wd_fb_og_status'] ) ) {
 							case '1':
 								?>
 								<div class="updated">
@@ -325,7 +321,7 @@ class Webdados_FB_Admin {
 								<div class="error">
 									<p><?php
 										echo '<strong>'.__('Error: Facebook Open Graph Tags cache NOT updated/purged.', 'wonderm00ns-simple-facebook-open-graph-tags').'</strong>';
-										if ( isset($_GET['wd_fb_og_error']) ) echo '<br/>'.$_GET['wd_fb_og_error'];
+										if ( isset($_GET['wd_fb_og_error']) ) echo '<br/>'.sanitize_text_field( $_GET['wd_fb_og_error'] );
 									?></p>
 									<p>
 										<strong>
@@ -453,7 +449,7 @@ class Webdados_FB_Admin {
 
 	/* Run tools */
 	public function run_tools( $value ) {
-		if ( is_array( $_POST['tools'] ) ) {
+		if ( isset( $_POST['tools'] ) && is_array( $_POST['tools'] ) ) {
 			foreach ( $_POST['tools'] as $tool ) {
 				$function = 'run_tool_'.$tool;
 				$this->$function();

@@ -1,7 +1,6 @@
 <?php
 /**
  * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -51,6 +50,8 @@ class Webdados_FB_Public {
 	/* Insert the tags on the header */
 	public function insert_meta_tags() {
 		global $webdados_fb, $wp_query;
+
+		$debug = array();
 
 		if ( !apply_filters( 'fb_og_disable', false ) ) {
 
@@ -109,11 +110,13 @@ class Webdados_FB_Public {
 				}
 
 				if ( is_singular() ) { //Including homepage if set as static page
+
+					$debug[] = 'is_singular';
 		
 					global $post;
 					// Title
 						//It's a Post or a Page or an attachment page - It can also be the homepage if it's set as a page
-						$fb_title = esc_attr( wp_strip_all_tags( stripslashes( $post->post_title ), true ) );
+						$fb_title = wp_strip_all_tags( stripslashes( $post->post_title ), true );
 						//SubHeading
 						if ( isset($this->options['fb_show_subheading']) && intval($this->options['fb_show_subheading'])==1 && $webdados_fb->is_subheading_plugin_active() ) {
 							if (isset($this->options['fb_subheading_position']) && $this->options['fb_subheading_position']=='before' ) {
@@ -183,7 +186,7 @@ class Webdados_FB_Public {
 							$current_view_object = $wpbdp->dispatcher->current_view_object();
 							switch( $bdp_action ) {
 								case 'show_listing':
-									$fb_title = trim( esc_attr( wp_strip_all_tags( stripslashes( $this->post->post_title ), true ) ).' - '.$fb_title, ' -' );
+									$fb_title = trim( wp_strip_all_tags( stripslashes( $this->post->post_title ), true ).' - '.$fb_title, ' -' );
 									$fb_set_title_tag = 1;
 									$fb_url = get_permalink($this->post->ID);
 									if ( trim($this->post->post_excerpt)!='' ) {
@@ -216,6 +219,7 @@ class Webdados_FB_Public {
 						}
 					// WooCommerce
 						if ( $webdados_fb->is_woocommerce_active() && is_product() ) {
+							$debug[] = 'is_product';
 							$fb_type = 'product';
 							$product = new WC_Product( $post->ID );
 							//Price
@@ -263,7 +267,7 @@ class Webdados_FB_Public {
 				} else {
 		
 					//Other pages - Defaults
-					$fb_title = esc_attr( wp_strip_all_tags( stripslashes( get_bloginfo( 'name' ) ), true ) );
+					$fb_title = wp_strip_all_tags( stripslashes( get_bloginfo( 'name' ) ), true );
 					$fb_url = ( ( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) ? 'https://' : 'http://' ).$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];  //Not really canonical but will work for now
 					$fb_image = trim( $this->options['fb_image'] );
 		
@@ -277,27 +281,31 @@ class Webdados_FB_Public {
 		
 					//Category
 					if ( is_category() ) {
-						$fb_title = esc_attr( wp_strip_all_tags( stripslashes( single_cat_title( '', false ) ), true ) );
+						$debug[] = 'is_category';
+						$fb_title = wp_strip_all_tags( stripslashes( single_cat_title( '', false ) ), true );
 						$term = $wp_query->get_queried_object();
 						$fb_url = get_term_link( $term, $term->taxonomy );
-						$cat_desc = trim( esc_attr( wp_strip_all_tags( stripslashes( category_description() ), true ) ) );
+						$cat_desc = trim( wp_strip_all_tags( stripslashes( category_description() ), true ) );
 						if ( trim($cat_desc)!='' ) $fb_desc = $cat_desc;
 					} else {
 						if ( is_tag() ) {
-							$fb_title = esc_attr( wp_strip_all_tags( stripslashes( single_tag_title( '', false ) ), true ) );
+							$debug[] = 'is_tag';
+							$fb_title = wp_strip_all_tags( stripslashes( single_tag_title( '', false ) ), true );
 							$term = $wp_query->get_queried_object();
 							$fb_url = get_term_link( $term, $term->taxonomy );
-							$tag_desc = trim( esc_attr( wp_strip_all_tags( stripslashes( tag_description() ), true ) ) );
+							$tag_desc = trim( wp_strip_all_tags( stripslashes( tag_description() ), true ) );
 							if ( trim($tag_desc)!='' ) $fb_desc = $tag_desc;
 						} else {
 							if (is_tax()) {
-								$fb_title = esc_attr( wp_strip_all_tags( stripslashes( single_term_title( '', false ) ), true ) );
+								$fb_title = wp_strip_all_tags( stripslashes( single_term_title( '', false ) ), true );
 								$term = $wp_query->get_queried_object();
 								$fb_url = get_term_link($term, $term->taxonomy);
-								$tax_desc = trim( esc_attr( wp_strip_all_tags( stripslashes( term_description() ), true ) ) );
+								$debug[] = 'is_tax: '.$term->taxonomy;
+								$tax_desc = trim( wp_strip_all_tags( stripslashes( term_description() ), true ) );
 								if ( trim($tax_desc)!='' ) $fb_desc = $tax_desc;
 								//WooCommerce
-								if ( $webdados_fb->is_woocommerce_active() && intval($this->options['fb_wc_usecategthumb'])==1 && is_product_category() ) {
+								if ( $webdados_fb->is_woocommerce_active() && intval($this->options['fb_wc_usecategthumb'])==1 && ( is_product_category() || is_tax('product_brand') ) ) {
+									if ( is_product_category() )  $debug[] = 'is_product_category';
 									if ( intval($this->options['fb_image_show'])==1 || intval($this->options['fb_image_show_schema'])==1 || intval($this->options['fb_image_show_twitter'])==1 ) {
 										if ( $thumbnail_id = get_woocommerce_term_meta( $term->term_id, 'thumbnail_id', true ) ) {
 											if ( $image = wp_get_attachment_url( $thumbnail_id ) ) {
@@ -308,35 +316,43 @@ class Webdados_FB_Public {
 								}
 							} else {
 								if ( is_search() ) {
-									$fb_title = esc_attr( wp_strip_all_tags( stripslashes( __('Search for', 'wonderm00ns-simple-facebook-open-graph-tags').' "'.get_search_query().'"' ), true ) );
+									$debug[] = 'is_search';
+									$fb_title = wp_strip_all_tags( stripslashes( __('Search for', 'wonderm00ns-simple-facebook-open-graph-tags').' "'.get_search_query().'"' ), true );
 									$fb_url = get_search_link();
 								} else {
 									if (is_author()) {
-										$fb_title = esc_attr( wp_strip_all_tags( stripslashes( get_the_author_meta('display_name', get_query_var('author') ) ), true ) );
+										$debug[] = 'is_author';
+										$fb_title = wp_strip_all_tags( stripslashes( get_the_author_meta('display_name', get_query_var('author') ) ), true );
 										$fb_url = get_author_posts_url( get_query_var('author'), get_query_var('author_name') );
 									} else {
 										if ( is_archive() ) {
+											$debug[] = 'is_archive';
 											if ( is_day() ) {
-												$fb_title = esc_attr( wp_strip_all_tags( stripslashes( get_query_var( 'day' ) . ' ' .single_month_title( ' ', false ) . ' ' . __( 'Archives', 'wonderm00ns-simple-facebook-open-graph-tags' ) ), true ) );
+												$debug[] = 'is_day';
+												$fb_title = wp_strip_all_tags( stripslashes( get_query_var( 'day' ) . ' ' .single_month_title( ' ', false ) . ' ' . __( 'Archives', 'wonderm00ns-simple-facebook-open-graph-tags' ) ), true );
 												$fb_url = get_day_link( get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
 											} else {
 												if ( is_month() ) {
-													$fb_title = esc_attr( wp_strip_all_tags( stripslashes( single_month_title( ' ', false ) . ' ' . __( 'Archives', 'wonderm00ns-simple-facebook-open-graph-tags' ) ), true ) );
+													$debug[] = 'is_month';
+													$fb_title = wp_strip_all_tags( stripslashes( single_month_title( ' ', false ) . ' ' . __( 'Archives', 'wonderm00ns-simple-facebook-open-graph-tags' ) ), true );
 													$fb_url = get_month_link( get_query_var( 'year' ), get_query_var( 'monthnum' ) );
 												} else {
 													if ( is_year() ) {
-														$fb_title = esc_attr( wp_strip_all_tags( stripslashes( get_query_var( 'year' ) . ' ' . __( 'Archives', 'wonderm00ns-simple-facebook-open-graph-tags' ) ), true ) );
+														$debug[] = 'is_year';
+														$fb_title = wp_strip_all_tags( stripslashes( get_query_var( 'year' ) . ' ' . __( 'Archives', 'wonderm00ns-simple-facebook-open-graph-tags' ) ), true );
 														$fb_url = get_year_link( get_query_var( 'year' ) );
 													}
 												}
 											}
 										} else {
 											if ( is_front_page() ) { //Regular homepage
+												$debug[] = 'is_front_page';
 												$fb_url = get_option('home').(intval($this->options['fb_url_add_trailing'])==1 ? '/' : '');
 												$fb_type = trim( $this->options['fb_type_homepage']=='' ? 'website' : $this->options['fb_type_homepage'] );
 												$fb_desc = $fb_desc_homepage;
 											} else {
 												if ( is_home() ) { //Blog page (set as page)
+													$debug[] = 'is_home';
 													if ( 'page' === get_option( 'show_on_front' ) && $page_for_posts = get_option( 'page_for_posts' ) ) {
 														//$post = get_post( $page_for_posts ); //This is NOT the global $post and it's actually not needed because we'll use the post ID = $page_for_posts
 														//Blog page
@@ -406,6 +422,7 @@ class Webdados_FB_Public {
 				//YOAST SEO?
 				if ( $this->options['fb_show_wpseoyoast']==1 ) {
 					if ( $webdados_fb->is_yoast_seo_active() ) {
+						$debug[] = 'yoast_seo';
 						$wpseo = WPSEO_Frontend::get_instance();
 						//Title
 						$fb_title_temp = $wpseo->title(false);
@@ -432,6 +449,7 @@ class Webdados_FB_Public {
 				//All in One SEO Pack?
 				if ( $this->options['fb_show_aioseop']==1 ) {
 					if ( $webdados_fb->is_aioseop_active() ) {
+						$debug[] = 'aio_seo';
 						global $aiosp;
 						//Title - Why are we getting the first post title on archives and homepage...?!?
 						$fb_title_temp = $aiosp->orig_title;
@@ -507,6 +525,7 @@ class Webdados_FB_Public {
 		
 				//Image overlay - Single?
 				if ( intval($this->options['fb_image_show'])==1 && intval($this->options['fb_image_overlay'])==1 && apply_filters('fb_og_image_overlay', true, $fb_image) ) {
+					$debug[] = 'image overlay';
 					//Single
 					$temp_fb_image_overlay = $this->get_image_with_overlay($fb_image);
 					if ( $temp_fb_image_overlay['overlay'] ) {
@@ -549,106 +568,118 @@ class Webdados_FB_Public {
 				$html.=' <!-- Facebook Open Graph -->
 ';
 					//Locale
-					if ( intval($this->options['fb_locale_show'])==1 ) $html.='  <meta property="og:locale" content="'.trim(esc_attr( trim($this->options['fb_locale'])!='' ? trim($this->options['fb_locale']) : $webdados_fb->get_locale() )).'"/>
+					if ( intval($this->options['fb_locale_show'])==1 ) $html.='  <meta property="og:locale" content="'.esc_attr(trim( trim($this->options['fb_locale'])!='' ? trim($this->options['fb_locale']) : $webdados_fb->get_locale() )).'"/>
 ';
 					//Site name
-					if ( intval($this->options['fb_sitename_show'])==1 ) $html.='  <meta property="og:site_name" content="'.trim(esc_attr(get_bloginfo('name' ))).'"/>
+					if ( intval($this->options['fb_sitename_show'])==1 ) $html.='  <meta property="og:site_name" content="'.esc_attr(trim(get_bloginfo('name' ))).'"/>
 ';
 					//Title
-					if ( intval($this->options['fb_title_show'])==1 && trim($fb_title)!='' ) $html.='  <meta property="og:title" content="'.trim(esc_attr($fb_title)).'"/>
+					if ( intval($this->options['fb_title_show'])==1 && trim($fb_title)!='' ) $html.='  <meta property="og:title" content="'.esc_attr(trim($fb_title)).'"/>
 ';
 					//URL
-					if ( intval($this->options['fb_url_show'])==1 && trim($fb_url)!='' ) $html.='  <meta property="og:url" content="'.trim(esc_attr($fb_url)).'"/>
+					if ( intval($this->options['fb_url_show'])==1 && trim($fb_url)!='' ) $html.='  <meta property="og:url" content="'.esc_attr(trim($fb_url)).'"/>
 ';
 					//Type
-					if ( intval($this->options['fb_type_show'])==1 && trim($fb_type)!='' ) $html.='  <meta property="og:type" content="'.trim(esc_attr($fb_type)).'"/>
+					if ( intval($this->options['fb_type_show'])==1 && trim($fb_type)!='' ) $html.='  <meta property="og:type" content="'.esc_attr(trim($fb_type)).'"/>
 ';
 					//Description
-					if ( intval($this->options['fb_desc_show'])==1 && trim($fb_desc)!='' ) $html.='  <meta property="og:description" content="'.trim(esc_attr($fb_desc)).'"/>
+					if ( intval($this->options['fb_desc_show'])==1 && trim($fb_desc)!='' ) $html.='  <meta property="og:description" content="'.esc_attr(trim($fb_desc)).'"/>
 ';
 					//Image
-					if( intval($this->options['fb_image_show'])==1 && trim($fb_image)!='' ) $html.='  <meta property="og:image" content="'.trim(esc_attr($fb_image)).'"/>
+					if( intval($this->options['fb_image_show'])==1 && trim($fb_image)!='' ) $html.='  <meta property="og:image" content="'.esc_attr(trim($fb_image)).'"/>
 ';
 					//Additional Images
 					if( intval($this->options['fb_image_show'])==1  && isset($fb_image_additional) && is_array($fb_image_additional) && count($fb_image_additional)>0 ) {
 						foreach ($fb_image_additional as $fb_image_additional_temp) {
 							if ( isset($fb_image_additional_temp['fb_image']) && trim($fb_image_additional_temp['fb_image'])!='' ) {
-								$html.='  <meta property="og:image" content="'.trim(esc_attr($fb_image_additional_temp['fb_image'])).'"/>
+								$html.='  <meta property="og:image" content="'.esc_attr(trim($fb_image_additional_temp['fb_image'])).'"/>
 ';
 							}
 						}
 					} else {
 						//Image Size - We only show the image size if we only have one image
-						if( intval($this->options['fb_image_size_show'])==1 && isset($fb_image_size) && is_array($fb_image_size) ) $html.='  <meta property="og:image:width" content="'.intval(esc_attr($fb_image_size[0])).'"/>
-  <meta property="og:image:height" content="'.intval(esc_attr($fb_image_size[1])).'"/>
+						if( intval($this->options['fb_image_size_show'])==1 && isset($fb_image_size) && is_array($fb_image_size) ) $html.='  <meta property="og:image:width" content="'.esc_attr(intval($fb_image_size[0])).'"/>
+  <meta property="og:image:height" content="'.esc_attr(intval($fb_image_size[1])).'"/>
 ';
 					}
 					//Dates
-					if ( intval($this->options['fb_article_dates_show'])==1 && trim($fb_article_pub_date)!='' ) $html.='  <meta property="article:published_time" content="'.trim(esc_attr($fb_article_pub_date)).'"/>
+					if ( intval($this->options['fb_article_dates_show'])==1 && trim($fb_article_pub_date)!='' ) $html.='  <meta property="article:published_time" content="'.esc_attr(trim($fb_article_pub_date)).'"/>
 ';
-					if ( intval($this->options['fb_article_dates_show'])==1 && trim($fb_article_mod_date)!='') $html.='  <meta property="article:modified_time" content="'.trim(esc_attr($fb_article_mod_date)).'" />
-  <meta property="og:updated_time" content="'.trim(esc_attr($fb_article_mod_date)).'" />
+					if ( intval($this->options['fb_article_dates_show'])==1 && trim($fb_article_mod_date)!='') $html.='  <meta property="article:modified_time" content="'.esc_attr(trim($fb_article_mod_date)).'" />
+  <meta property="og:updated_time" content="'.esc_attr(trim($fb_article_mod_date)).'" />
 ';
 					//Sections
 					if (intval($this->options['fb_article_sections_show'])==1 && isset($fb_sections) && is_array($fb_sections) && count($fb_sections)>0) {
 						foreach($fb_sections as $fb_section) {
-							$html.='  <meta property="article:section" content="'.trim(esc_attr($fb_section)).'"/>
+							$html.='  <meta property="article:section" content="'.esc_attr(trim($fb_section)).'"/>
 ';
 						}
 					}
 					//Author
-					if ( intval($this->options['fb_author_show'])==1 && $fb_author!='') $html.='  <meta property="article:author" content="'.trim(esc_attr($fb_author)).'"/>
+					if ( intval($this->options['fb_author_show'])==1 && $fb_author!='') $html.='  <meta property="article:author" content="'.esc_attr(trim($fb_author)).'"/>
 ';
 					//Publisher
-					if ( intval($this->options['fb_publisher_show'])==1 && trim($fb_publisher)!='') $html.='  <meta property="article:publisher" content="'.trim(esc_attr($fb_publisher)).'"/>
+					if ( intval($this->options['fb_publisher_show'])==1 && trim($fb_publisher)!='') $html.='  <meta property="article:publisher" content="'.esc_attr(trim($fb_publisher)).'"/>
 ';
 					//App ID
-					if ( intval($this->options['fb_app_id_show'])==1 && trim($fb_app_id)!='' ) $html.='  <meta property="fb:app_id" content="'.trim(esc_attr($fb_app_id)).'"/>
+					if ( intval($this->options['fb_app_id_show'])==1 && trim($fb_app_id)!='' ) $html.='  <meta property="fb:app_id" content="'.esc_attr(trim($fb_app_id)).'"/>
 ';
 					//Admins
-					if ( intval($this->options['fb_admin_id_show'])==1 && trim($this->options['fb_admin_id'])!='' ) $html.='  <meta property="fb:admins" content="'.trim(esc_attr($this->options['fb_admin_id'])).'"/>
+					if ( intval($this->options['fb_admin_id_show'])==1 && trim($this->options['fb_admin_id'])!='' ) $html.='  <meta property="fb:admins" content="'.esc_attr(trim($this->options['fb_admin_id'])).'"/>
 ';
 				// Schema
 			$html.=' <!-- Google+ / Schema.org -->
 ';
 					//Title
-					if ( intval($this->options['fb_title_show_schema'])==1 && trim($fb_title)!='' ) $html.='  <meta itemprop="name" content="'.trim(esc_attr($fb_title)).'"/>
+					if ( intval($this->options['fb_title_show_schema'])==1 && trim($fb_title)!='' ) $html.='  <meta itemprop="name" content="'.esc_attr(trim($fb_title)).'"/>
+  <meta itemprop="headline" content="'.esc_attr(trim($fb_title)).'"/>
 ';
 					//Description
-					if ( intval($this->options['fb_desc_show_schema'])==1 && trim($fb_desc)!='' ) $html.='  <meta itemprop="description" content="'.trim(esc_attr($fb_desc)).'"/>
+					if ( intval($this->options['fb_desc_show_schema'])==1 && trim($fb_desc)!='' ) $html.='  <meta itemprop="description" content="'.esc_attr(trim($fb_desc)).'"/>
 ';
 					//Image
-					if( intval($this->options['fb_image_show_schema'])==1 && trim($fb_image)!='' ) $html.='  <meta itemprop="image" content="'.trim(esc_attr($fb_image)).'"/>
+					if( intval($this->options['fb_image_show_schema'])==1 && trim($fb_image)!='' ) $html.='  <meta itemprop="image" content="'.esc_attr(trim($fb_image)).'"/>
 ';
-					//Author
-					if ( intval($this->options['fb_author_show_linkrelgp'])==1 && trim($fb_author_linkrelgp)!='') $html.='  <link rel="author" href="'.trim(esc_attr($fb_author_linkrelgp)).'"/>
+					//Dates
+					if ( intval($this->options['fb_article_dates_show_schema'])==1 && trim($fb_article_pub_date)!='' ) $html.='  <meta itemprop="datePublished" content="'.substr(esc_attr(trim($fb_article_pub_date)),0,10).'"/>
 ';
-					//Publisher
-					if ( intval($this->options['fb_publisher_show_schema'])==1 && trim($fb_publisher_schema)!='') $html.='  <link rel="publisher" href="'.trim(esc_attr($fb_publisher_schema)).'"/>
+					if ( intval($this->options['fb_article_dates_show_schema'])==1 && trim($fb_article_mod_date)!='') $html.='  <meta itemprop="dateModified" content="'.esc_attr(trim($fb_article_mod_date)).'" />
+';
+					//Author - Link (no longer used)
+					if ( intval($this->options['fb_author_show_linkrelgp'])==1 && trim($fb_author_linkrelgp)!='') $html.='  <link rel="author" href="'.esc_attr(trim($fb_author_linkrelgp)).'"/>
+';
+					//Author - Name
+					if (intval($this->options['fb_author_show_schema'])==1 && $fb_author_meta!='') $html.='  <meta itemprop="author" content="'.esc_attr(trim($fb_author_meta)).'"/>
+';
+					//Publisher - Link
+					if ( intval($this->options['fb_publisher_show_schema'])==1 && trim($fb_publisher_schema)!='') $html.='  <link rel="publisher" href="'.esc_attr(trim($fb_publisher_schema)).'"/>
+';
+					//Publisher- Name - The attribute publisher.itemtype has an invalid value
+					if ( intval($this->options['fb_publisher_show_schema'])==1 ) $html.='  <!--<meta itemprop="publisher" content="'.esc_attr(trim(get_bloginfo('name' ))).'"/>--> <!-- To solve: The attribute publisher.itemtype has an invalid value -->
 ';
 				// Twitter
 			$html.=' <!-- Twitter Cards -->
 ';
 					//Title
-					if ( intval($this->options['fb_title_show_twitter'])==1 && trim($fb_title)!='' ) $html.='  <meta name="twitter:title" content="'.trim(esc_attr($fb_title)).'"/>
+					if ( intval($this->options['fb_title_show_twitter'])==1 && trim($fb_title)!='' ) $html.='  <meta name="twitter:title" content="'.esc_attr(trim($fb_title)).'"/>
 ';
 					//URL
-					if ( intval($this->options['fb_url_show_twitter'])==1 && trim($fb_url)!='' ) $html.='  <meta name="twitter:url" content="'.trim(esc_attr($fb_url)).'"/>
+					if ( intval($this->options['fb_url_show_twitter'])==1 && trim($fb_url)!='' ) $html.='  <meta name="twitter:url" content="'.esc_attr(trim($fb_url)).'"/>
 ';
 					//Description
-					if ( intval($this->options['fb_desc_show_twitter'])==1 && trim($fb_desc)!='' ) $html.='  <meta name="twitter:description" content="'.trim(esc_attr($fb_desc)).'"/>
+					if ( intval($this->options['fb_desc_show_twitter'])==1 && trim($fb_desc)!='' ) $html.='  <meta name="twitter:description" content="'.esc_attr(trim($fb_desc)).'"/>
 ';
 					//Image
-					if( intval($this->options['fb_image_show_twitter'])==1 && trim($fb_image)!='' ) $html.='  <meta name="twitter:image" content="'.trim(esc_attr($fb_image)).'"/>
+					if( intval($this->options['fb_image_show_twitter'])==1 && trim($fb_image)!='' ) $html.='  <meta name="twitter:image" content="'.esc_attr(trim($fb_image)).'"/>
 ';
 					//Twitter Card
-					if( intval($this->options['fb_title_show_twitter'])==1 || intval($this->options['fb_url_show_twitter'])==1 || intval($this->options['fb_desc_show_twitter'])==1 || intval($this->options['fb_publisher_show_twitter'])==1 || intval($this->options['fb_image_show_twitter'])==1 ) $html.='  <meta name="twitter:card" content="'.trim(esc_attr($this->options['fb_twitter_card_type'])).'"/>
+					if( intval($this->options['fb_title_show_twitter'])==1 || intval($this->options['fb_url_show_twitter'])==1 || intval($this->options['fb_desc_show_twitter'])==1 || intval($this->options['fb_publisher_show_twitter'])==1 || intval($this->options['fb_image_show_twitter'])==1 ) $html.='  <meta name="twitter:card" content="'.esc_attr(trim($this->options['fb_twitter_card_type'])).'"/>
 ';
 					//Author
-					if ( intval($this->options['fb_author_show_twitter'])==1 && trim($fb_author_twitter)!='' ) $html.='  <meta name="twitter:creator" content="@'.trim(esc_attr( $fb_author_twitter )).'"/>
+					if ( intval($this->options['fb_author_show_twitter'])==1 && trim($fb_author_twitter)!='' ) $html.='  <meta name="twitter:creator" content="@'.esc_attr(trim( $fb_author_twitter )).'"/>
 ';
 					//Publisher
-					if ( intval($this->options['fb_publisher_show_twitter'])==1 && trim($fb_publisher_twitteruser)!='') $html.='  <meta name="twitter:site" content="@'.trim(esc_attr($fb_publisher_twitteruser)).'"/>
+					if ( intval($this->options['fb_publisher_show_twitter'])==1 && trim($fb_publisher_twitteruser)!='') $html.='  <meta name="twitter:site" content="@'.esc_attr(trim($fb_publisher_twitteruser)).'"/>
 ';
 				// SEO
 			$html.=' <!-- SEO -->
@@ -659,16 +690,16 @@ class Webdados_FB_Public {
 						//We should use wp_title(), but do we want to? This is only because Business Directory Plugin and they seem to have it covered by now...
 					}
 					//URL
-					if ( intval($this->options['fb_url_canonical'])==1 ) $html.='  <link rel="canonical" href="'.trim(esc_attr($fb_url)).'"/>
+					if ( intval($this->options['fb_url_canonical'])==1 ) $html.='  <link rel="canonical" href="'.esc_attr(trim($fb_url)).'"/>
 ';
 					//Description
-					if ( intval($this->options['fb_desc_show_meta'])==1 && trim($fb_desc)!='' ) $html.='  <meta name="description" content="'.trim(esc_attr($fb_desc)).'"/>
+					if ( intval($this->options['fb_desc_show_meta'])==1 && trim($fb_desc)!='' ) $html.='  <meta name="description" content="'.esc_attr(trim($fb_desc)).'"/>
 ';
 					//Author
-					if (intval($this->options['fb_author_show_meta'])==1 && $fb_author_meta!='') $html.='  <meta name="author" content="'.trim(esc_attr($fb_author_meta)).'"/>
+					if (intval($this->options['fb_author_show_meta'])==1 && $fb_author_meta!='') $html.='  <meta name="author" content="'.esc_attr(trim($fb_author_meta)).'"/>
 ';
 					//Publisher
-					if ( intval($this->options['fb_publisher_show_meta'])==1 ) $html.='  <meta name="publisher" content="'.trim(esc_attr(get_bloginfo('name' ))).'"/>
+					if ( intval($this->options['fb_publisher_show_meta'])==1 ) $html.='  <meta name="publisher" content="'.esc_attr(trim(get_bloginfo('name' ))).'"/>
 ';
 				// SEO
 			$html.=' <!-- Misc. tags -->
@@ -676,19 +707,20 @@ class Webdados_FB_Public {
 					foreach ($fb_additional_tags as $type => $tags) {
 						foreach($tags as $tag => $values) {
 							foreach($values as $value) {
-								$html.='  <meta '.$type.'="'.str_replace('_', ':', trim($tag)).'" content="'.trim(esc_attr($value)).'"/>
+								$html.='  <meta '.$type.'="'.str_replace('_', ':', trim($tag)).'" content="'.esc_attr(trim($value)).'"/>
 ';	
 							}
 						}
 					}
 			} else {
 	
-				$html.=' <!-- Removed by fb_og_enabled filter -->
-';
+				$debug[] = 'Removed by fb_og_enabled filter';
 	
 			}
 		
 			//Close tag
+			if ( apply_filters( 'fb_og_enable_debug', true ) ) $html.=' <!-- '.implode( ' | ', $debug ).' -->
+';
 			$html.='<!-- END - '.WEBDADOS_FB_PLUGIN_NAME.' '.WEBDADOS_FB_VERSION.' -->
 	
 ';

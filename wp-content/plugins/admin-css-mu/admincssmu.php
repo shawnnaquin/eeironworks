@@ -5,8 +5,8 @@ Plugin URI: http://millionclues.com
 Description: A plugin to load a CSS file to style the admin side. Works with Multisite.
 Author: Arun Basil Lal
 Author URI: http://millionclues.com
-Version: 2.4
-Text Domain: abl_admincssmu_td
+Version: 2.5
+Text Domain: admin-css-mu
 Domain Path: /languages
 License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
@@ -28,11 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function admincssmu_add_menu_links() {
 	if ( is_multisite() ) {
 		if ( get_current_blog_id() == SITE_ID_CURRENT_SITE ) {
-			add_theme_page ( __('Admin CSS MU','abl_admincssmu_td'), __('Admin CSS MU','abl_admincssmu_td'), 'update_core', 'admin-css-mu','admincssmu_admin_interface_render'  );
+			add_theme_page ( __('Admin CSS MU','admin-css-mu'), __('Admin CSS MU','admin-css-mu'), 'update_core', 'admin-css-mu','admincssmu_admin_interface_render'  );
 		}
 	}
 	else {
-		add_theme_page ( __('Admin CSS MU','abl_admincssmu_td'), __('Admin CSS MU','abl_admincssmu_td'), 'update_core', 'admin-css-mu','admincssmu_admin_interface_render'  );
+		add_theme_page ( __('Admin CSS MU','admin-css-mu'), __('Admin CSS MU','admin-css-mu'), 'update_core', 'admin-css-mu','admincssmu_admin_interface_render'  );
 	}
 }
 add_action( 'admin_menu', 'admincssmu_add_menu_links' );
@@ -42,7 +42,7 @@ add_action( 'admin_menu', 'admincssmu_add_menu_links' );
 function admincssmu_settings_link( $links ) {
 	return array_merge(
 		array(
-			'settings' => '<a href="' . admin_url( 'themes.php?page=admin-css-mu' ) . '">' . __( 'Add CSS', 'abl_admincssmu_td' ) . '</a>'
+			'settings' => '<a href="' . admin_url( 'themes.php?page=admin-css-mu' ) . '">' . __( 'Add CSS', 'admin-css-mu' ) . '</a>'
 		),
 		$links
 	);
@@ -66,7 +66,7 @@ add_filter( 'plugin_row_meta', 'admincssmu_plugin_row_meta', 10, 2 );
 
 // Load Text Domain
 function admincssmu_load_plugin_textdomain() {
-    load_plugin_textdomain( 'abl_admincssmu_td', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+    load_plugin_textdomain( 'admin-css-mu', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
 add_action( 'plugins_loaded', 'admincssmu_load_plugin_textdomain' );
 
@@ -143,7 +143,7 @@ function admincssmu_footer_text($default) {
 		return $default;
 	}
 	
-    $admincssmu_footer_text = sprintf( __( 'If you like this plugin, please <a href="%s" target="_blank">make a donation</a> or leave a <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating to support continued development. Thanks a bunch!', 'abl_admincssmu_td' ), 
+    $admincssmu_footer_text = sprintf( __( 'If you like this plugin, please <a href="%s" target="_blank">make a donation</a> or leave a <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating to support continued development. Thanks a bunch!', 'admin-css-mu' ), 
 								'http://millionclues.com/donate/',
 								'https://wordpress.org/support/plugin/admin-css-mu/reviews/?rate=5#new-post' 
 						);
@@ -218,12 +218,12 @@ function admincssmu_admin_interface_render () {
 		$admincssmu_custom_css_option = get_option( 'admincssmu_custom_css' );
 	}
 	
-	$admincssmu_admin_css_content = isset( $admincssmu_custom_css_option['admincssmu_admin_css'] ) && ! empty( $admincssmu_custom_css_option['admincssmu_admin_css'] ) ? $admincssmu_custom_css_option['admincssmu_admin_css'] : __( "/* Enter Your Custom Admin CSS Here */\r\n", 'abl_admincssmu_td' );
+	$admincssmu_admin_css_content = isset( $admincssmu_custom_css_option['admincssmu_admin_css'] ) && ! empty( $admincssmu_custom_css_option['admincssmu_admin_css'] ) ? $admincssmu_custom_css_option['admincssmu_admin_css'] : __( "/* Enter Your Custom Admin CSS Here */\r\n", 'admin-css-mu' );
 
 ?>
 	<div class="wrap">
-		<h1><?php _e('Admin CSS MU','abl_admincssmu_td') ?></h1>
-		<p><?php _e('Enter your custom CSS below and it will be loaded on all Admin Pages.','abl_admincssmu_td') ?></p>
+		<h1><?php _e('Admin CSS MU','admin-css-mu') ?></h1>
+		<p><?php _e('Enter your custom CSS below and it will be loaded on all Admin Pages.','admin-css-mu') ?></p>
 		
 		<form method="post" action="options.php" enctype="multipart/form-data">
 		
@@ -234,16 +234,16 @@ function admincssmu_admin_interface_render () {
 			<div style="margin-top: 5px;">
 				<input type="checkbox" name="admincssmu_custom_css[load_css]" id="admincssmu_custom_css[load_css]" value="1" 
 				<?php if ( isset( $admincssmu_custom_css_option['load_css'] ) ) { checked( '1', $admincssmu_custom_css_option['load_css'] ); } ?>>
-				<label for="admincssmu_custom_css[load_css]" style="vertical-align: unset;"><?php _e('Load Admin CSS', 'abl_admincssmu_td') ?></label>
+				<label for="admincssmu_custom_css[load_css]" style="vertical-align: unset;"><?php _e('Load Admin CSS', 'admin-css-mu') ?></label>
 			</div>
 			
 			<div style="margin-top: 5px;">
 				<input type="checkbox" name="admincssmu_custom_css[minfy_css]" id="admincssmu_custom_css[minfy_css]" value="1"
 					<?php if ( isset( $admincssmu_custom_css_option['minfy_css'] ) ) { checked( '1', $admincssmu_custom_css_option['minfy_css'] ); } ?>>
-					<label for="admincssmu_custom_css[minfy_css]" style="vertical-align: unset;"><?php _e('Minify CSS', 'abl_admincssmu_td') ?></label>
+					<label for="admincssmu_custom_css[minfy_css]" style="vertical-align: unset;"><?php _e('Minify CSS', 'admin-css-mu') ?></label>
 			</div>
 			
-			<?php submit_button( __( 'Save CSS', 'abl_admincssmu_td' ), 'primary', 'submit', true ); ?>
+			<?php submit_button( __( 'Save CSS', 'admin-css-mu' ), 'primary', 'submit', true ); ?>
 		</form>
 		
 		<?php // Highlighter ?>
@@ -299,4 +299,17 @@ if ( file_exists ( get_theme_root() . '/custom_admin.css' )) {
 	}
 	add_action( 'admin_enqueue_scripts', 'admincssmu_load_custom_admin_css' );
 }
-?>
+
+/**
+ * Get the boolean value of a variable
+ *
+ * @param 	mixed 	The scalar value being converted to a boolean.
+ * @return 	boolean The boolean value of var.
+ * @refer	https://millionclues.com/wordpress-tips/solved-fatal-error-call-to-undefined-function-boolval/
+ */
+if( !function_exists('boolval')) {
+  
+  function boolval($var){
+    return !! $var;
+  }
+}

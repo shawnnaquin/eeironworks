@@ -1,6 +1,5 @@
 <?php
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -12,8 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WP_Hummingbird_Module_Minify_Housekeeper {
 
+	/**
+	 * Init method.
+	 */
 	function init() {
-		if ( ! wp_next_scheduled ( 'wphb_minify_clear_files' ) ) {
+		if ( ! wp_next_scheduled( 'wphb_minify_clear_files' ) ) {
 			wp_schedule_event( time(), 'daily', 'wphb_minify_clear_files' );
 		}
 

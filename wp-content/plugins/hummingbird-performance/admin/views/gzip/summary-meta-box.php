@@ -17,14 +17,14 @@ if ( $external_problem ) : ?>
 			<li>- <?php esc_html_e( 'Contact your host. If deflate is enabled, ask why all .htaccess or nginx.conf compression rules are not being applied.', 'wphb' ); ?></li>
 		</ul>
 		<?php /* translators: %s: support link */ ?>
-		<p><?php printf( __( 'If re-checking and restarting does not resolve, please check with your host or <a href="%s" target="_blank">open a support ticket with us</a>.', 'wphb' ), wphb_support_link() ); ?></p>
+		<p><?php printf( __( 'If re-checking and restarting does not resolve, please check with your host or <a href="%s" target="_blank">open a support ticket with us</a>.', 'wphb' ), WP_Hummingbird_Utils::get_link( 'support' ) ); ?></p>
 	</div>
 <?php endif; ?>
 
 
 <p><?php esc_html_e( 'Gzip compresses your web pages and style sheets before sending them over to the browser. This drastically reduces transfer time since the files are much smaller.', 'wphb' ); ?></p>
 <?php if ( $inactive_types ) : ?>
-	<div class="wphb-notice wphb-notice-warning">
+	<div class="sui-notice sui-notice-warning">
 		<p>
 			<?php
 			printf(
@@ -35,7 +35,7 @@ if ( $external_problem ) : ?>
 		</p>
 	</div>
 <?php else : ?>
-	<div class="wphb-notice wphb-notice-success">
+	<div class="sui-notice sui-notice-success">
 		<p><?php esc_html_e( 'GZip compression is currently active. Good job!', 'wphb' ); ?></p>
 	</div>
 <?php endif; ?>
@@ -53,10 +53,10 @@ if ( $external_problem ) : ?>
 	<?php
 	foreach ( $status as $type => $result ) :
 		$result_status = __( 'Inactive', 'wphb' );
-		$result_status_color = 'yellow';
+		$result_status_color = 'warning';
 		if ( $result ) {
 			$result_status = __( 'Active', 'wphb' );
-			$result_status_color = 'green';
+			$result_status_color = 'success';
 		}
 		?>
 		<div class="table-row">
@@ -77,8 +77,8 @@ if ( $external_problem ) : ?>
 			</div>
 
 			<div>
-				<span class="wphb-button-label wphb-button-label-<?php echo esc_attr( $result_status_color ); ?> tooltip-right"
-					  tooltip="<?php printf( /* translators: %1$s: compressions status; %2$s: compression type */
+				<span class="sui-tag sui-tag-<?php echo esc_attr( $result_status_color ); ?> sui-tooltip sui-tooltip-top-left"
+					  data-tooltip="<?php printf( /* translators: %1$s: compressions status; %2$s: compression type */
 							esc_html__( 'Gzip compression is %1$s for %2$s', 'wphb' ),
 							esc_html( strtolower( $result_status ) ), esc_html( $type ) ); ?>">
 					<?php echo esc_html( $result_status ); ?>

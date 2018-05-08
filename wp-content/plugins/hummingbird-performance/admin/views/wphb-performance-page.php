@@ -1,23 +1,21 @@
 <?php
-/** @var WP_Hummingbird_Performance_Report_Page $this */
-$last_test = wphb_performance_get_last_report();
-?>
+/**
+ * Render page.
+ *
+ * @package Hummingbird
+ *
+ * @var array|wp_error $report  Report, set in render_inner_content().
+ */
 
+?>
 <?php if ( $this->has_meta_boxes( 'summary' ) ) : ?>
-	<div class="row">
-		<?php $this->do_meta_boxes( 'summary' ); ?>
-	</div>
+	<?php $this->do_meta_boxes( 'summary' ); ?>
 <?php endif; ?>
 
-<div class="row">
-	<?php if ( $last_test ) : ?>
-		<div class="col-fifth">
-			<?php $this->show_tabs(); ?>
-		</div><!-- end col-sixth -->
-
-		<div class="col-four-fifths">
-			<?php $this->do_meta_boxes( $this->get_current_tab() ); ?>
-		</div>
+<div class="sui-row-with-sidenav">
+	<?php if ( $report ) : ?>
+		<?php $this->show_tabs(); ?>
+		<?php $this->do_meta_boxes( $this->get_current_tab() ); ?>
 	<?php else : ?>
 		<?php $this->do_meta_boxes( 'main' ); ?>
 	<?php endif; ?>

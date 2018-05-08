@@ -5,43 +5,54 @@
 <?php endif; ?>
 
 <div class="row">
-	<?php $this->do_meta_boxes( 'summary' ); ?>
+	<?php
+	if ( ! $this->has_meta_boxes( 'box-enqueued-files-empty' ) ) {
+		$message = sprintf(
+			/* translators: %d: number of files, %d: number of files optimized */
+			__( '<strong>Hummingbird found %1$d files and has automatically optimized %2$d of them!</strong>', 'wphb' ),
+			WP_Hummingbird_Utils::minified_files_count(),
+			WP_Hummingbird_Utils::minified_files_count( true )
+		);
+		if ( 'basic' === $this->mode ) {
+			$message .= ' ';
+			$message .= __( 'If you wish to have more control, <a href="#" class="wphb-switch-button">switch to advanced mode</a>.', 'wphb' );
+		}
+		$this->admin_notices->show( 'minification-optimized', $message, 'warning', true, false );
+	}
+
+	$this->do_meta_boxes( 'summary' );
+	?>
 </div>
 
 <?php if ( ! $this->has_meta_boxes( 'box-enqueued-files-empty' ) ) : ?>
-	<div class="row">
-		<div class="col-fifth">
-			<?php $this->show_tabs(); ?>
-		</div><!-- end col-sixth -->
+	<div class="sui-row-with-sidenav">
+		<?php $this->show_tabs(); ?>
 
-		<div class="col-four-fifths">
-			<form action="" method="post" id="wphb-minification-form">
-				<?php if ( 'files' === $this->get_current_tab() ) : ?>
-					<div class="minification-main-screen">
-						<?php $this->do_meta_boxes( 'main' ); ?>
-
-						<?php if ( $this->has_meta_boxes( 'main-2' ) ) : ?>
-							<div class="wphb-notice wphb-notice-box no-top-space">
-								<p><?php esc_html_e( 'Hummingbird will combine your files as best it can, however, depending on your settings, combining all your files might not be possible. What you see here is the best output Hummingbird can muster!', 'wphb' ); ?></p>
-							</div>
-							<?php $this->do_meta_boxes( 'main-2' ); ?>
-						<?php endif; ?>
-					</div>
-				<?php endif; ?>
-
-				<?php if ( 'settings' === $this->get_current_tab() ) : ?>
-					<div class="minification-settings-screen">
-						<?php $this->do_meta_boxes( 'settings' ); ?>
-					</div>
-				<?php endif; ?>
+		<?php if ( 'files' === $this->get_current_tab() ) : ?>
+			<form id="wphb-minification-form" method="post">
+				<?php $this->do_meta_boxes( 'main' ); ?>
 			</form>
-		</div><!-- end col-five-sixths -->
+		<?php endif; ?>
+
+		<?php if ( 'tools' === $this->get_current_tab() ) : ?>
+			<form id="wphb-minification-tools-form" method="post">
+				<?php $this->do_meta_boxes( 'tools' ); ?>
+			</form>
+		<?php endif; ?>
+
+		<?php if ( 'settings' === $this->get_current_tab() ) : ?>
+			<form id="wphb-minification-settings-form" method="post">
+				<?php $this->do_meta_boxes( 'settings' ); ?>
+			</form>
+		<?php endif; ?>
 
 	</div><!-- end row -->
-<?php endif; ?>
-
-<?php
-wphb_membership_modal();
+<?php endif;
+if ( 'advanced' === $this->mode ) {
+	WP_Hummingbird_Utils::get_modal( 'minification-basic' );
+} else {
+	WP_Hummingbird_Utils::get_modal( 'minification-advanced' );
+}
 ?>
 
 <script>

@@ -1,8 +1,5 @@
 <?php
-/**
- * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.1.2
- */
+
 	define('WP_USE_THEMES', false);
 	require( '../../../wp-blog-header.php' );
 

@@ -1,4 +1,7 @@
 
 #!/bin/bash
 #comment
-chmod -R 755 /var/www/html/
+
+sudo chown -Rf apache:apache *
+sudo find * -type d -exec chmod 755 {} \;
+sudo find * -type f -exec chmod 644 {} \;

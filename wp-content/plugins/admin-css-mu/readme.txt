@@ -3,7 +3,7 @@ Contributors: arunbasillal
 Donate link: http://millionclues.com/donate/
 Tags: admin css, mu plugin, custom admin css, admin, admin interface, multisite, must use
 Requires at least: 3.0
-Tested up to: 4.8.2
+Tested up to: 4.9.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,12 @@ I am glad to hear that! You can either [make a donation](http://millionclues.com
 
 == Changelog ==
 
+= 2.5 =
+* Date: 18.January.2018
+* Added support for PHP version lesser than PHP 5.5
+* Updated text domain. For plugins, text domain should be the slug which is admin-css-mu in this case
+* Tested with WordPress 4.9.2
+
 = 2.4 =
 * Date: 29.August.2017
 * Fixed: Compatibility issue with [Custom Login Admin Front-end CSS](https://wordpress.org/plugins/custom-login-admin-front-end-css-with-multisite-support/) plugin. 
@@ -64,32 +70,44 @@ I am glad to hear that! You can either [make a donation](http://millionclues.com
 * Code improvements.
 
 = 2.3 =
+* Date: 18.August.2017
 * Tested with WordPress 4.8.1. Result = pass.
 * Updated CSSTidy classes to meet PHP 7.x standards.
 * Added option to minify CSS. CSS is only minified during use and the CSS editor will show the un-minified and more readable version for easy editing. 
 
 = 2.2 =
+* Date: 14.December.2016
 * Tested with WordPress 4.7.
 * Uses wp_kses() instead of esc_html() during output to prevent stripping of useful html tags.
 * Minor bug fixes.
 
 = 2.1 =
+* Date: 19.March.2016
 * Updated multisite compatibility.
 * Appearance > Admin CSS MU is now visible only on the main website. 
 
 = 2.0 =
+* Date: 15.March.2016
 * Added an admin interface in Appearance > Admin CSS MU.
 * Tested with WordPress 4.5.
 
 = 1.01 =
+* Date: 11.April.2016
 * Code updates.
 * Tested with WordPress 4.4.2.
 * Changed the location of custom stylesheet into /wp-content/uploads/admin-css-mu/ while preserving the original folder for backward compatiblity with version 1.0
 
 = 1.0 =
+* Date: 25.June.2012
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 2.5 =
+* Date: 18.January.2018
+* Added support for PHP version lesser than PHP 5.5
+* Updated text domain. For plugins, text domain should be the slug which is admin-css-mu in this case
+* Tested with WordPress 4.9.2
 
 = 2.4 =
 * Date: 29.August.2017
@@ -104,16 +122,21 @@ I am glad to hear that! You can either [make a donation](http://millionclues.com
 * Added option to minify CSS. CSS is only minified during use and the CSS editor will show the un-minified and more readable version for easy editing. 
 
 = 2.2 =
-Minor bug fixes and fully compatible with WordPress 4.7. 
+* Date: 14.December.2016
+* Minor bug fixes and fully compatible with WordPress 4.7. 
 
 = 2.1 =
-Upgrade for Multisite compatibility. 
+* Date: 19.March.2016
+* Upgrade for Multisite compatibility. 
 
 = 2.0 =
-Upgrade for an admin interface in Appearance > Admin CSS MU. Backward compatible. 
+* Date: 15.March.2016
+* Upgrade for an admin interface in Appearance > Admin CSS MU. Backward compatible. 
 
 = 1.01 =
-Upgrade for better code. Backward comaptible with 1.0
+* Date: 11.April.2016
+* Upgrade for better code. Backward comaptible with 1.0
 
 = 1.0 =
-First release of the plugin.
+* Date: 25.June.2012
+* First release of the plugin.
