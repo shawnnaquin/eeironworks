@@ -5,14 +5,18 @@ files:
   - source: /
     destination: /var/www/html/
 permissions:
-  - object: /var/www/html
+  - object: /var/www/html/
     pattern: "**"
+    owner: apache
+    group: apache
     mode: 755
     type:
       - directory
-  - object: /var/www/html
+  - object: /var/www/html/
     pattern: "**"
     mode: 644
+    owner: apache
+    group: apache
     type:
       - file
 hooks:
