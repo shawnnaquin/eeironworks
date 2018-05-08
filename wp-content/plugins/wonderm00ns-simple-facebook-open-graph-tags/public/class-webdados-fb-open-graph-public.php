@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Facebook Open Graph, Google+ and Twitter Card Tags
- * @version 2.1.5
+ * @version 2.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -21,6 +21,12 @@ class Webdados_FB_Public {
 
 	/* BDP Post temporary holder */
 	private $post = false;
+
+	/* Use partial image when getting it's size? */
+	private $image_size_use_partial = false;
+
+	/* Cache / transient validity - Default: one week */
+	private $transient_validity = WEEK_IN_SECONDS;
 
 
 
@@ -54,6 +60,11 @@ class Webdados_FB_Public {
 ';
 	
 			if ( apply_filters('fb_og_enabled', true) ) {
+
+				//Partial image - Since 2.2 we do NOT get partial by default anymore - Advanced users can use this filter to use it again
+				$this->image_size_use_partial = apply_filters( 'fb_og_image_size_use_partial', false );
+				//If we're using partial image, we lower the transient validity to one day
+				if ( $this->image_size_use_partial ) $this->transient_validity = DAY_IN_SECONDS;
 		
 				//Also set Title Tag? - Needed??
 				$fb_set_title_tag=0;
@@ -96,8 +107,8 @@ class Webdados_FB_Public {
 						$fb_desc_homepage = get_bloginfo( 'description' );
 						break;
 				}
-		
-				if ( is_singular() ) {
+
+				if ( is_singular() ) { //Including homepage if set as static page
 		
 					global $post;
 					// Title
@@ -222,6 +233,16 @@ class Webdados_FB_Public {
 							if ( function_exists('get_woocommerce_currency') )  $fb_additional_tags['name']['twitter_data1'] = array(
 								$price.' '.get_woocommerce_currency()
 							);
+							//Stock
+							if ( $product->is_in_stock() ) {
+								$fb_additional_tags['property']['product_availability'] = array(
+									'instock'
+								);
+							} else {
+								$fb_additional_tags['property']['product_availability'] = array(
+									'oos'
+								);
+							}
 							//Additional product images?
 							if ( intval($this->options['fb_image_show'])==1 && $this->options['fb_wc_useproductgallery']==1 ) {
 								if ( $attachment_ids = version_compare( WC_VERSION, '3.0', '>=' ) ? $product->get_gallery_image_ids() : $product->get_gallery_attachment_ids() ) {
@@ -310,12 +331,29 @@ class Webdados_FB_Public {
 												}
 											}
 										} else {
-											if (is_front_page()) {
+											if ( is_front_page() ) { //Regular homepage
 												$fb_url = get_option('home').(intval($this->options['fb_url_add_trailing'])==1 ? '/' : '');
 												$fb_type = trim( $this->options['fb_type_homepage']=='' ? 'website' : $this->options['fb_type_homepage'] );
 												$fb_desc = $fb_desc_homepage;
 											} else {
-												//Others... Defaults already set up there
+												if ( is_home() ) { //Blog page (set as page)
+													if ( 'page' === get_option( 'show_on_front' ) && $page_for_posts = get_option( 'page_for_posts' ) ) {
+														//$post = get_post( $page_for_posts ); //This is NOT the global $post and it's actually not needed because we'll use the post ID = $page_for_posts
+														//Blog page
+														$fb_type = trim( $this->options['fb_type_homepage']=='' ? 'website' : $this->options['fb_type_homepage'] );
+														if ( $fb_desc = trim( get_post_meta($page_for_posts, '_webdados_fb_open_graph_specific_description', true) ) ) {
+															//OK - From our metabox
+														} else {
+															//Use default
+															$fb_desc = $fb_desc_homepage;
+														}
+														if ( intval($this->options['fb_image_show'])==1 || intval($this->options['fb_image_show_schema'])==1 || intval($this->options['fb_image_show_twitter'])==1 ) {
+															$fb_image = $this->get_post_image( $page_for_posts );
+														}
+													}
+												} else {
+													//Others... Defaults already set up there
+												}
 											}
 										}
 									}
@@ -668,67 +706,93 @@ class Webdados_FB_Public {
 
 
 	/* Get post image - Singular pages */
-	private function get_post_image() {
-		global $post;
-		$thumbdone = false;
-		$fb_image = '';
-		$minsize = intval($this->options['fb_image_min_size']);
-		//Attachment page? - This overrides the other options
-		if ( is_attachment() ) {
-			if ( $temp=wp_get_attachment_image_src(null, 'full' ) ) {
-				$fb_image = trim($temp[0]);
-				$img_size = array(intval($temp[1]), intval($temp[2]));
-				if ( trim($fb_image)!='' ) {
-					$thumbdone=true;
-				}
-			}
+	private function get_post_image( $post_id = NULL ) {
+		if ( $post_id ) {
+			$current_post = false;
+			//Specific post
+			$post = get_post( $post_id );
+		} else {
+			$current_post = true;
+			//Current post
+			global $post;
 		}
-		//Specific post image
-		if ( !$thumbdone ) {
-			if ( intval($this->options['fb_image_use_specific'])==1 ) {
-				if ( $fb_image = trim(get_post_meta($post->ID, '_webdados_fb_open_graph_specific_image', true)) ) {
+		if ( $post ) {
+			$thumbdone = false;
+			$fb_image = '';
+			$minsize = intval($this->options['fb_image_min_size']);
+			//Attachment page? - This overrides the other options
+			if ( !$current_post && is_attachment() ) {
+				if ( $temp=wp_get_attachment_image_src(null, 'full' ) ) {
+					$fb_image = trim($temp[0]);
+					$img_size = array(intval($temp[1]), intval($temp[2]));
 					if ( trim($fb_image)!='' ) {
 						$thumbdone=true;
 					}
 				}
 			}
-		}
-		//Featured image
-		if ( !$thumbdone ) {
-			if ( function_exists('get_post_thumbnail_id' ) ) {
-				if ( intval($this->options['fb_image_use_featured'])==1 ) {
-					if ( $id_attachment=get_post_thumbnail_id($post->ID) ) {
-						//There's a featured/thumbnail image for this post
-						$fb_image = wp_get_attachment_url($id_attachment, false);
-						$thumbdone = true;
+			//Specific post image
+			if ( !$thumbdone ) {
+				if ( intval($this->options['fb_image_use_specific'])==1 ) {
+					if ( $fb_image = trim(get_post_meta($post->ID, '_webdados_fb_open_graph_specific_image', true)) ) {
+						if ( trim($fb_image)!='' ) {
+							$thumbdone=true;
+						}
 					}
 				}
 			}
-		}
-		//From post/page content
-		if ( !$thumbdone ) {
-			if ( intval($this->options['fb_image_use_content'])==1 ) {
-				$imgreg = '/<img .*src=["\']([^ ^"^\']*)["\']/';
-				preg_match_all($imgreg, trim($post->post_content), $matches);
-				if ($matches[1]) {
-					$imagetemp=false;
-					foreach($matches[1] as $image) {
-						//There's an image on the content
-						$pos = strpos($image, site_url());
-						if ($pos === false) {
-							if (stristr($image, 'http://' ) || stristr($image, 'https://' ) || mb_substr($image, 0, 2)=='//' ) {
-								if (mb_substr($image, 0, 2)=='//' ) $image=((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) ? 'https:' : 'http:' ).$image;
-								//Complete URL - offsite
-								//if ( intval(ini_get('allow_url_fopen' ))==1 ) {
-									$imagetemp=$image;
-									$imagetempsize=$imagetemp;
-								//} else {
-									//If it's offsite we can't getimagesize'it, so we won't use it
-									//We could save a temporary version locally and then getimagesize'it but do we want to do this every single time?
-								//}
+			//Featured image
+			if ( !$thumbdone ) {
+				if ( function_exists('get_post_thumbnail_id' ) ) {
+					if ( intval($this->options['fb_image_use_featured'])==1 ) {
+						if ( $id_attachment=get_post_thumbnail_id($post->ID) ) {
+							//There's a featured/thumbnail image for this post
+							$fb_image = wp_get_attachment_url($id_attachment, false);
+							$thumbdone = true;
+						}
+					}
+				}
+			}
+			//From post/page content
+			if ( !$thumbdone ) {
+				if ( intval($this->options['fb_image_use_content'])==1 ) {
+					$imgreg = '/<img .*src=["\']([^ ^"^\']*)["\']/';
+					preg_match_all($imgreg, trim($post->post_content), $matches);
+					if ($matches[1]) {
+						$imagetemp=false;
+						foreach($matches[1] as $image) {
+							//There's an image on the content
+							$pos = strpos( $image, site_url() );
+							if ( $pos === false ) {
+								if (stristr($image, 'http://' ) || stristr($image, 'https://' ) || mb_substr($image, 0, 2)=='//' ) {
+									if (mb_substr($image, 0, 2)=='//' ) $image=((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) ? 'https:' : 'http:' ).$image;
+									//Complete URL - offsite
+									//if ( intval(ini_get('allow_url_fopen' ))==1 ) {
+										$imagetemp=$image;
+										$imagetempsize=$imagetemp;
+									//} else {
+										//If it's offsite we can't getimagesize'it, so we won't use it
+										//We could save a temporary version locally and then getimagesize'it but do we want to do this every single time?
+									//}
+								} else {
+									//Partial URL - we guess it's onsite because no http(s)://
+									$imagetemp=site_url().$image;
+									$imagetempsize=(
+										intval(ini_get('allow_url_fopen' ))==1
+										?
+										(
+											intval($this->options['fb_adv_force_local'])==1
+											?
+											ABSPATH.str_replace(trailingslashit(site_url()), '', $imagetemp)
+											:
+											$imagetemp
+										)
+										:
+										ABSPATH.str_replace(trailingslashit(site_url()), '', $imagetemp)
+									);
+								}
 							} else {
-								//Partial URL - we guess it's onsite because no http(s)://
-								$imagetemp=site_url().$image;
+								//Complete URL - onsite
+								$imagetemp=$image;
 								$imagetempsize=(
 									intval(ini_get('allow_url_fopen' ))==1
 									?
@@ -743,10 +807,34 @@ class Webdados_FB_Public {
 									ABSPATH.str_replace(trailingslashit(site_url()), '', $imagetemp)
 								);
 							}
-						} else {
-							//Complete URL - onsite
-							$imagetemp=$image;
-							$imagetempsize=(
+							if ($imagetemp) {
+								if ( intval($this->options['fb_adv_disable_image_size'])==1 ) {
+									//If we don't check for image size, we'll just accept the first one
+									$fb_image = $imagetemp;
+									$thumbdone = true;
+									break; //Break the foreach
+								} else {
+									if ( $img_size = $this->get_open_graph_image_size( $imagetempsize ) ) {
+										if ($img_size[0] >= $minsize && $img_size[1] >= $minsize) {
+											$fb_image = $imagetemp;
+											$thumbdone = true;
+											break; //Break the foreach
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			//From media gallery
+			if ( !$thumbdone ) {
+				if ( intval($this->options['fb_image_use_media'])==1 ) {
+					$images = get_posts(array('post_type' => 'attachment','numberposts' => -1,'post_status' => null,'order' => 'ASC','orderby' => 'menu_order','post_mime_type' => 'image','post_parent' => $post->ID));
+					if ( $images ) {
+						foreach( $images as $image ) {
+							$imagetemp = wp_get_attachment_url($image->ID, false);
+							$imagetempsize = (
 								intval(ini_get('allow_url_fopen' ))==1
 								?
 								(
@@ -759,15 +847,13 @@ class Webdados_FB_Public {
 								:
 								ABSPATH.str_replace(trailingslashit(site_url()), '', $imagetemp)
 							);
-						}
-						if ($imagetemp) {
 							if ( intval($this->options['fb_adv_disable_image_size'])==1 ) {
 								//If we don't check for image size, we'll just accept the first one
 								$fb_image = $imagetemp;
 								$thumbdone = true;
 								break; //Break the foreach
 							} else {
-								if ($img_size = $this->get_open_graph_image_size($imagetempsize)) {
+								if ( $img_size = $this->get_open_graph_image_size($imagetempsize) ) {
 									if ($img_size[0] >= $minsize && $img_size[1] >= $minsize) {
 										$fb_image = $imagetemp;
 										$thumbdone = true;
@@ -779,58 +865,22 @@ class Webdados_FB_Public {
 					}
 				}
 			}
-		}
-		//From media gallery
-		if ( !$thumbdone ) {
-			if ( intval($this->options['fb_image_use_media'])==1 ) {
-				$images = get_posts(array('post_type' => 'attachment','numberposts' => -1,'post_status' => null,'order' => 'ASC','orderby' => 'menu_order','post_mime_type' => 'image','post_parent' => $post->ID));
-				if ( $images ) {
-					foreach( $images as $image ) {
-						$imagetemp = wp_get_attachment_url($image->ID, false);
-						$imagetempsize = (
-							intval(ini_get('allow_url_fopen' ))==1
-							?
-							(
-								intval($this->options['fb_adv_force_local'])==1
-								?
-								ABSPATH.str_replace(trailingslashit(site_url()), '', $imagetemp)
-								:
-								$imagetemp
-							)
-							:
-							ABSPATH.str_replace(trailingslashit(site_url()), '', $imagetemp)
-						);
-						if ( intval($this->options['fb_adv_disable_image_size'])==1 ) {
-							//If we don't check for image size, we'll just accept the first one
-							$fb_image = $imagetemp;
-							$thumbdone = true;
-							break; //Break the foreach
-						} else {
-							if ( $img_size = $this->get_open_graph_image_size($imagetempsize) ) {
-								if ($img_size[0] >= $minsize && $img_size[1] >= $minsize) {
-									$fb_image = $imagetemp;
-									$thumbdone = true;
-									break; //Break the foreach
-								}
-							}
-						}
-					}
+			//From default
+			if ( !$thumbdone ) {
+				if ( intval($this->options['fb_image_use_default'])==1 ) {
+					//Well... We sure did try. We'll just keep the default one!
+					$fb_image = $this->options['fb_image'];
+				} else {
+					//User chose not to use default on pages/posts
+					$fb_image = '';
 				}
 			}
+			//Return
+			return $fb_image;
+		} else {
+			//No post
+			return false;
 		}
-		//From default
-		if ( !$thumbdone ) {
-			if ( intval($this->options['fb_image_use_default'])==1 ) {
-				//Well... We sure did try. We'll just keep the default one!
-				$fb_image = $this->options['fb_image'];
-			} else {
-				//User chose not to use default on pages/posts
-				$fb_image = '';
-			}
-		}
-		//Return
-		return $fb_image;
-
 	}
 
 
@@ -863,7 +913,10 @@ class Webdados_FB_Public {
 			curl_setopt($curl, CURLOPT_REFERER, ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) ? 'https://' : 'http://' ).$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 			curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); //Try to fix White Screen Of Death - https://wordpress.org/support/topic/html-truncated/#post-9714288
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 			$data = curl_exec($curl);
+			//if ( !$data ) var_dump( curl_error( $curl ) ); //Debug
 			curl_close($curl);
 			return $data;
 		} catch(Exception $e) {
@@ -874,17 +927,23 @@ class Webdados_FB_Public {
 		//Just in case we've missed it somewhere...
 		if ( intval($this->options['fb_adv_disable_image_size'])==1 ) return false;
 		//Go ahead
-		$transient_key = 'webdados_og_image_size_' . md5($image);
-		$transient_val = get_transient($transient_key);
-		if ($transient_val) {
-			return $transient_val;
+		if ( apply_filters( 'fb_og_image_size_cache', true ) ) {
+			$transient_key = 'webdados_og_image_size_' . md5($image);
+			$transient_val = get_transient($transient_key);
+			if ($transient_val) {
+				return $transient_val;
+			}
 		}
 		if ( stristr($image, 'http://' ) || stristr($image, 'https://' ) || mb_substr($image, 0, 2)=='//' ) {
-			if ( function_exists('curl_version' ) && function_exists('imagecreatefromstring' ) ) {
-				//We'll get just a part of the image to speed things up. From http://stackoverflow.com/questions/4635936/super-fast-getimagesize-in-php
-				$headers = array(
-					"Range: bytes=0-32768"
-				);
+			if ( function_exists( 'curl_version' ) && function_exists( 'imagecreatefromstring' ) ) {
+				//If true - We'll get just a part of the image to speed things up. From http://stackoverflow.com/questions/4635936/super-fast-getimagesize-in-php
+				if ( $this->image_size_use_partial ) {
+					$headers = array(
+						"Range: bytes=0-32768"
+					);
+				} else {
+					$headers = null;
+				}
 				$data = $this->get_open_graph_image_size_curl($image, $headers);
 				if ( $data ) {
 					$done_partial = false;
@@ -893,18 +952,22 @@ class Webdados_FB_Public {
 						$im = @imagecreatefromstring($data); //Mute errors because we're not loading the all image
 						if ($im) $done_partial = true;
 					} catch(Exception $e) {
-						//Try again with the whole image - In case of Fatal Error
-						$tried_full = true;
-						$data = $this->get_open_graph_image_size_curl($image, null);
-						$im = @imagecreatefromstring($data);
-					}
-					if ( !$done_partial && !$tried_full ) {
-						//Try again with the whole image - In case of Warning
-						if ( $data = $this->get_open_graph_image_size_curl($image, null) ) {
+						if ( !$this->image_size_use_partial ) { //We already tried it full
+							//Try again with the whole image - In case of Fatal Error
+							$tried_full = true;
+							$data = $this->get_open_graph_image_size_curl($image, null);
 							$im = @imagecreatefromstring($data);
-						} else {
-							//No way...
-							$im = false;
+						}
+					}
+					if ( !$this->image_size_use_partial ) { //We already tried it full
+						if ( !$done_partial && !$tried_full ) {
+							//Try again with the whole image - In case of Warning
+							if ( $data = $this->get_open_graph_image_size_curl($image, null) ) {
+								$im = @imagecreatefromstring($data);
+							} else {
+								//No way...
+								$im = false;
+							}
 						}
 					}
 					if ( $im ) {
@@ -948,8 +1011,8 @@ class Webdados_FB_Public {
 			//Local path
 			$img_size = getimagesize($image);
 		}
-		if ($img_size) {
-			set_transient($transient_key, $img_size, DAY_IN_SECONDS);
+		if ( $img_size && apply_filters( 'fb_og_image_size_cache', true ) ) {
+			set_transient( $transient_key, $img_size, $this->transient_validity );
 		}
 		$this->image_size = $img_size;
 		return $img_size;

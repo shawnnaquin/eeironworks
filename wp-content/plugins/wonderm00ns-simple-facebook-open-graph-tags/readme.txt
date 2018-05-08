@@ -1,10 +1,11 @@
 === Facebook Open Graph, Google+ and Twitter Card Tags ===
 Contributors: webdados, wonderm00n
-Donate link: https://blog.wonderm00n.com/2011/10/14/wordpress-plugin-simple-facebook-open-graph-tags/
+Donate link: http://bit.ly/donate_fb_opengraph
 Tags: facebook, open graph, open graph protocol, share, social, meta, rss, twitter card, twitter, schema, google+, g+, google, google plus, image, like, seo, search engine optimization, woocommerce, yoast seo, wordpress seo, woocommerce, subheading, php7
 Requires at least: 4.5
-Tested up to: 4.9
-Stable tag: 2.1.5
+Tested up to: 4.9.1
+Stable tag: 2.2
+
 Inserts Facebook Open Graph, Google+/Schema.org, Twitter and SEO Meta Tags into your WordPress Website for more efficient sharing results.
 
 == Description ==
@@ -72,7 +73,7 @@ Our settings page is discreetly kept under "Options", as it should, instead of t
 = 3rd Party Integration: =
 
 * **[Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)**: Allows you to use title, url (canonical) and description from the Yoast SEO plugin.
-* **[WooCommerce](https://wordpress.org/plugins/woocommerce/)**: On product pages sets `og:type` to "product" and adds the price including tax to the `product:price` tags. Also allows you to use the Product Category thumbnails as Open Graph Image and have Product Gallery images as additional Open Graph Images
+* **[WooCommerce](https://wordpress.org/plugins/woocommerce/)**: On product pages sets `og:type` to "product" and adds the price including tax to the `product:price` and `product:availability` tags. Also allows you to use the Product Category thumbnails as Open Graph Image and have Product Gallery images as additional Open Graph Images
 * **[SubHeading](https://wordpress.org/extend/plugins/subheading/)**: Add the SubHeading to the post/page title.
 * **[Business Directory Plugin](https://wordpress.org/extend/plugins/business-directory-plugin/)**: Allows you to use BDP listing contents as Open Graph Tags.
 
@@ -81,17 +82,9 @@ Our settings page is discreetly kept under "Options", as it should, instead of t
 
 1. Use the included automatic install feature on your WordPress admin panel and search for “Facebook Open Graph, Google+ and Twitter Card Tags”.
 2. Activate the plugin through the `Plugins` menu in WordPress
-3. Got to `Options`, `Facebook Open Graph, Google+ and Twitter Card Tags` to set it up
+3. Go to `Options`, `Facebook Open Graph, Google+ and Twitter Card Tags` to set it up
 
 == Frequently Asked Questions ==
-
-= Yoast SEO shows up a big nasty warning if both plugins are active. Is the world in danger if I keep both plugins active? =
-
-No it isn't.
-You can (and, in our opinion, you should) use both plugins. If you want to use Yoast SEO for your SEO needs and our plugin for social media meta tags you just have to go to "SEO > Social" and disable settings for Facebook, Twitter and Google+.
-If you don't find that option, because they've now made it harder to reach, you have to go to "SEO > Dashboard > Features > Advanced settings pages > choose Enabled and Save changes". Then you can reach "SEO > Social".
-Then set up our plugin as you wish and you're ready to go.
-We like to work with everybody, so (if you want to) our plugin can even integrate with Yoast SEO and use it's title, description and canonical URL on the Facebook, Google+ and Twitter tags.
 
 = Facebook is not showing up the correct image when I share a post. What can I do? =
 
@@ -112,8 +105,12 @@ Sometimes the plugin just can't update the Facebook cache itself and you may nee
 
 = Can I authenticate the call to Facebook, with my own app, when trying to update the cache, so I get rid of the "An access token is required to request this resource" error? =
 
-Yes, you can. Create a Facebook app and then use the `fb_og_update_cache_url` filter, like in this [code snippet](https://gist.github.com/webdados/32f2669fbe7653520664be410e5a03b2)
-Do NOT ask us support on this. This is an advanced feature for developers only.
+Yes, you can. Create a Facebook App and fill in the details on the "Facebook Open Graph Tags cache" panel of the plugin settings page.
+Do NOT ask us support on this. There is [a blog post on our website](https://www.webdados.pt/2017/12/successfully-update-facebook-cache-using-our-facebook-open-graph-plugin/) explaining everything you need to do.
+
+= Facebook says "The following required properties are missing: fb:app_id". Should I worry? =
+
+No. Move along.
 
 = Can this plugin get content from "random plugin"? =
 
@@ -124,11 +121,19 @@ If you are a plugin or theme author you can always use our filters `fb_og_title`
 
 Chouck out this [code snippet](https://gist.github.com/webdados/ef5d5db01f01bee6041c2b2e0950d73a).
 
-= I'me getting a white screen of death / truncated HTML =
+= I'm getting a white screen of death / truncated HTML =
 
 Go to the plugin settings and check the `Do not get image size` option.
 This happens on some edge cases we haven't yet been able to identify.
-Update: Probably fixed on 2.1.4.5
+Update: Probably fixed for some users on 2.1.4.5 and completely on 2.2 (pending confirmation)
+
+= Yoast SEO shows up a big nasty warning if both plugins are active. Is the world in danger if I keep both plugins active? =
+
+No it isn't.
+You can (and, in our opinion, you should) use both plugins. If you want to use Yoast SEO for your SEO needs and our plugin for social media meta tags you just have to go to "SEO > Social" and disable settings for Facebook, Twitter and Google+.
+If you don't find that option, because they've now made it harder to reach, you have to go to "SEO > Dashboard > Features > Advanced settings pages > choose Enabled and Save changes". Then you can reach "SEO > Social".
+Then set up our plugin as you wish and you're ready to go.
+We like to work with everybody, so (if you want to) our plugin can even integrate with Yoast SEO and use it's title, description and canonical URL on the Facebook, Google+ and Twitter tags.
 
 = There's a similar plugin on the repository, by Heateor. Is this the same? =
 
@@ -141,6 +146,36 @@ We DO NOT provide email support for this plugin. If you send us an email asking 
 2. Or we can give you a quote on premium email/phone support if you prefer to
 
 == Changelog ==
+
+= 2.2 =
+* New "Tools" panel on the settings page
+* Tool to clear all the plugin transients, thus resetting size caching for all images (use it only )
+* Small bug fix when the settings aren't yet saved at least one time
+* When getting the image size, the full image is used again, instead of the partial 32Kb (that caused WSOD in some environments), but this can be overridden (and use the partial again) by returning false to the new `fb_og_image_size_use_partial` filter
+* Transient validity is now one week (now that we get the all image and the process can slow down the page load a bit), instead of one day
+* Fix when getting the image and description for the blog url when it's set as a page (Thanks @alexiswilke)
+* Ability to disable image size cache (transients) completely by returning false to the new filter `fb_og_image_size_cache` (which we do NOT recommend)
+* Improved the FAQ
+
+= 2.1.6.3 =
+* Fix the "Suppress cache notices" option (Thanks @digbymaass)
+
+= 2.1.6.2 =
+* Default `og:type` to `website` on non-singular pages because Facebook deprecated it (Thanks @alexiswilke)
+* Automatically disable the overlay feature if GD is not installed (Thanks @tiagomagalhaes)
+* Set `og:type` to `website` instead of `article` when a page is set as a blog page
+* Use image from the page (our custom field, featured, etc...) when a page is set as a blog page (Thanks @alexiswilke)
+* Use description from our custom field when a page is set as a blog page
+* Adds the `product:availability` tag for WooCommerce products (Thanks @steveokk)
+* Improved the FAQ
+
+= 2.1.6.1 =
+* Updated the error message when the Facebook cache is not updated, in order to include instructions and a link to setup the App ID and Secret
+
+= 2.1.6 =
+* Added new "App ID" and "App Secret" settings on the "Facebook Open Graph Tags cache" panel, so that the plugin tries to clear the Facebook cache authenticated with you own App details
+* Bumped `Tested up to` and `WC tested up to` tags
+* Improved the FAQ
 
 = 2.1.5 =
 * Stop showing the metabox or trying to update Facebook cache on non-publicly_queryable post types

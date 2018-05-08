@@ -4,8 +4,6 @@
  * @version 2.1.2
  */
 
-	$out_link_utm='?utm_source=fb_og_wp_plugin_settings&amp;utm_medium=link&amp;utm_campaign=fb_og_wp_plugin';
-
 	$links = array(
 		0	=>	array(
 			'text'	=>	__('Test your URLs on the Facebook Debugger', 'wonderm00ns-simple-facebook-open-graph-tags'),
@@ -85,7 +83,10 @@
 						<input type="hidden" name="lc" value="PT">
 						<input type="hidden" name="item_name" value="Marco Almeida (Wonderm00n)">
 						<input type="hidden" name="item_number" value="facebook_open_graph_plugin">
-						<input type="hidden" name="currency_code" value="USD">
+						<select name="currency_code">
+							<option value="USD"><?php _e('Donate in US Dollars', 'wonderm00ns-simple-facebook-open-graph-tags'); ?></option>
+							<option value="EUR"><?php _e('Donate in Euros', 'wonderm00ns-simple-facebook-open-graph-tags'); ?></option>
+						</select>
 						<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
 						<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 						<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">

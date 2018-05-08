@@ -148,6 +148,8 @@ class Webdados_FB {
 			'fb_keep_data_uninstall'			=>	'intval',
 			'fb_adv_force_local'				=>	'intval',
 			'fb_adv_notify_fb'					=>	'intval',
+			'fb_adv_notify_fb_app_id'			=>	'trim',
+			'fb_adv_notify_fb_app_secret'		=>	'trim',
 			'fb_adv_supress_fb_notice'			=>	'intval',
 			'fb_twitter_card_type'				=>	'trim',
 			'fb_wc_usecategthumb'				=>	'intval',
@@ -164,6 +166,7 @@ class Webdados_FB {
 	/* Load Options */
 	private function load_options() {
 		$user_options = get_option( 'wonderm00n_open_graph_settings' );
+		if ( !is_array($user_options) ) $user_options = array();
 		$all_options = $this->all_options();
 		$default_options = $this->default_options();
 		if ( is_array( $all_options ) ) {
@@ -189,6 +192,11 @@ class Webdados_FB {
 				}
 			}
 		}
+		//Some defaults...
+		//Default type to 'website' - https://wordpress.org/support/topic/the-ogtype-blog-is-not-valid-anymore/
+		$user_options['fb_type_homepage'] = 'website';
+		//No GD? No overlay
+		if ( !extension_loaded('gd') ) $user_options['fb_image_overlay'] = 0;
 		return $user_options;
 	}
 
