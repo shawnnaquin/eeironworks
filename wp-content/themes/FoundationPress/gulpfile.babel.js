@@ -141,11 +141,7 @@ function images() {
 function server(done) {
   browser.init({
     proxy: BROWSERSYNC.url,
-
-    ui: {
-      port: 8080
-    },
-
+    https: true
   });
   done();
 }
