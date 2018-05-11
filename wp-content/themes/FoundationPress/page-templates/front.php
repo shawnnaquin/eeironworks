@@ -12,7 +12,7 @@ get_header(); ?>
 			<p>
 				Welcome to E.E. Ironworks, a blacksmithing shop that specializes in traditional blacksmithing techniques, metal fabrication, and custom installations.
 			</p>
-			<a role="button" class="download large button sites-button" href="#">Contact Us</a>
+			<a role="button" class="download large button sites-button js-contact-scroll" href="#">Contact</a>
 		</div>
 	</div>
 

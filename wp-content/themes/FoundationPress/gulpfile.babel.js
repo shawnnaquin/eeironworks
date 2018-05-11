@@ -140,23 +140,30 @@ function images() {
 // Start BrowserSync to preview the site in
 function server(done) {
   browser.init({
-    proxy: BROWSERSYNC.url,
-    https: true
+    proxy: 'https://eeiron.com/',
+    serveStatic: [{
+        route: '/wp-content/themes/FoundationPress/dist',
+        dir: './dist'
+    }],
+    watch: true,
+    files: './dist/**/*.*'
   });
   done();
 }
 
 // Reload the browser with BrowserSync
 function reload(done) {
-  browser.reload();
+  browser.reload({
+    stream: true
+  });
   done();
 }
 
 // Watch for changes to static assets, pages, Sass, and JavaScript
 function watch() {
   gulp.watch(PATHS.assets, copy);
-  gulp.watch('src/assets/scss/**/*.scss').on('all', sass);
-  gulp.watch('**/*.php').on('all', browser.reload);
-  gulp.watch('src/assets/js/**/*.js').on('all', gulp.series(javascript, browser.reload));
-  gulp.watch('src/assets/img/**/*').on('all', gulp.series(images, browser.reload));
+  gulp.watch('src/assets/scss/**/*.scss').on('change', sass);
+  gulp.watch( '**/*.php').on('all', ()=>{ browser.reload( { stream: true } ) } );
+  gulp.watch('src/assets/js/**/*.js').on('all', gulp.series(javascript, ()=>{ browser.reload( { stream: true } ) } ));
+  gulp.watch('src/assets/img/**/*').on('all', gulp.series(images, browser.reload ));
 }

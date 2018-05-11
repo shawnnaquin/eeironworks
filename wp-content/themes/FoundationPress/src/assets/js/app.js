@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import whatInput from 'what-input';
 import WebFont from 'webfontloader';
-
+console.log('hey');
 WebFont.load({
   google: {
     families: ['Droid Sans', 'Droid Serif', 'Droid Serif:italic', 'Bree Serif']
@@ -116,8 +116,17 @@ let Header = {
 		data.scrolled.state = data.$window.scrollTop();
 	},
 
-	init() {
+	scrollTo(e) {
+		console.log('hit');
+		document.getElementById('wpcf7-f67-o1').scrollIntoView({
+		  behavior: 'smooth'
+		});
+		e.preventDefault();
+	},
 
+	init() {
+		console.log('init');
+		document.querySelector('.js-contact-button').addEventListener('click', this.scrollTo, false );
 		this.loadIframe();
 		this.scroll();
 		$(window).on('scroll', this.data.scroll );
@@ -131,11 +140,11 @@ let modules = {
 }
 
 for (let [key, module] of Object.entries( modules ) ) {
-
+	console.log(module);
 	module.init();
-
 }
 
+console.log('init');
 window.App = modules;
 window.App.Data = data;
 
