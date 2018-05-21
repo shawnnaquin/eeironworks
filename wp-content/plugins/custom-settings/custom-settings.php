@@ -63,6 +63,14 @@ add_filter('admin_init', 'my_general_settings_register_fields');
 
     function my_general_settings_register_fields()
     {
+        register_setting('general', 'site_street', 'esc_attr');
+        add_settings_field('site_street', '<label for="site_street">'.__('Site Street' , 'site_street' ).'</label>' , 'site_street_html', 'general');
+
+        register_setting('general', 'site_address', 'esc_attr');
+        add_settings_field('site_address', '<label for="site_address">'.__('Site Address' , 'site_address' ).'</label>' , 'site_address_html', 'general');
+
+        register_setting('general', 'site_phone', 'esc_attr');
+        add_settings_field('site_phone', '<label for="site_phone">'.__('Site Phone' , 'site_phone' ).'</label>' , 'site_phone_html', 'general');
 
         register_setting('general', 'blog_header', 'esc_attr');
         add_settings_field('blog_header', '<label for="blog_header">'.__('Blog Header' , 'blog_header' ).'</label>' , 'blog_header_html', 'general');
@@ -103,6 +111,24 @@ add_filter('admin_init', 'my_general_settings_register_fields');
     {
         $blog_header = get_option( 'blog_header', '' );
         echo '<input type="text" class="long-text" id="blog_header" name="blog_header" value="' . $blog_header . '" />';
+    }
+
+    function site_street_html()
+    {
+        $site_street = get_option( 'site_street', '' );
+        echo '<input type="text" class="long-text" id="site_street" name="site_street" value="' . $site_street . '" />';
+    }
+
+    function site_address_html()
+    {
+        $site_address = get_option( 'site_address', '' );
+        echo '<input type="text" class="long-text" id="site_address" name="site_address" value="' . $site_address . '" />';
+    }
+
+    function site_phone_html()
+    {
+        $site_address = get_option( 'site_phone', '' );
+        echo '<input type="text" class="long-text" id="site_phone" name="site_phone" value="' . $site_phone . '" />';
     }
 
     function blog_subheader_html()

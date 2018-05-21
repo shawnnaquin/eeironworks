@@ -27,11 +27,34 @@
 					<div>
 						<p>
 							<a href="" target="_blank">
-								1333 N. Mascher Street<br>
-								Philadelphia, PA 19122
+								<?php
+									$street = get_option( 'site_street' );
+									if ( $street ) :
+										echo $street;
+								?>
+									<br/>
+								<?php
+									 endif;
+									$add = get_option( 'site_address' );
+									if ( $add ) :
+										echo $add;
+									endif;
+								?>
 							</a>
 							<br>
-							<a href="tel:215.739.6090">215.739.6090</a>
+							<?php
+								$tel = get_option('site_phone' );
+								if ( $tel ) {
+									$phone = preg_replace('/[^0-9]/', '', $tel );
+								}
+								if ( $tel ) :
+							?>
+							<a href="tel:+1<?php echo $phone; ?>">
+								<?php echo $tel ?>
+							</a>
+							<?php
+								endif;
+							?>
 						</p>
 					</div>
 				</article>
