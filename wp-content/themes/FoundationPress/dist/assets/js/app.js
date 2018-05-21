@@ -11947,16 +11947,35 @@ var Header = {
 	scroll: function scroll() {
 		data.scrolled.state = data.$window.scrollTop();
 	},
-	doContact: function doContact() {
+	doNav: function doNav() {
+
+		(0, _jquery2.default)('a[href="#about"]').on('click', function (e) {
+			console.log(window.location.hash);
+			(0, _jquery2.default)('#about')[0].scrollIntoView({
+				behavior: 'smooth'
+			});
+			history.replaceState(null, '', '#about');
+			e.preventDefault();
+		});
+
+		(0, _jquery2.default)('a[href="#work"]').on('click', function (e) {
+			(0, _jquery2.default)('#work')[0].scrollIntoView({
+				behavior: 'smooth'
+			});
+			history.replaceState(null, '', '#work');
+			e.preventDefault();
+		});
+
 		(0, _jquery2.default)('a[href="#contact"], .js-contact').on('click', function (e) {
 			(0, _jquery2.default)('#contact')[0].scrollIntoView({
 				behavior: 'smooth'
 			});
+			history.replaceState(null, '', '#contact');
 			e.preventDefault();
 		});
 	},
 	init: function init() {
-		this.doContact();
+		this.doNav();
 		this.loadIframe();
 		this.scroll();
 		(0, _jquery2.default)(window).on('scroll', this.data.scroll);

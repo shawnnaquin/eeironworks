@@ -35,7 +35,7 @@ get_header(); ?>
 
 <?php do_action( 'foundationpress_before_content' ); ?>
 <?php while ( have_posts() ) : the_post(); ?>
-<section class="intro" role="main">
+<section class="intro" role="main" id="about">
 	<div class="fp-intro">
 
 		<div <?php post_class() ?> id="post-<?php the_ID(); ?>">
@@ -83,7 +83,7 @@ get_header(); ?>
     $the_query = new WP_Query( $args );
 
 ?>
-	<section class="featured-images">
+	<section class="featured-images" id="work">
         <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
         	<button class=" featured-image" data-open="featured-image" style="background-image: url( <?php the_post_thumbnail_url( 'large' ); ?> );">
     		<?php

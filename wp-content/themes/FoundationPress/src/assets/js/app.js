@@ -116,17 +116,36 @@ let Header = {
 		data.scrolled.state = data.$window.scrollTop();
 	},
 
-	doContact() {
+	doNav() {
+
+		$('a[href="#about"]').on('click', function(e) {
+			console.log( window.location.hash );
+			$('#about')[0].scrollIntoView({
+				  behavior: 'smooth'
+			});
+			history.replaceState(null, '', '#about');
+			e.preventDefault();
+		});
+
+		$('a[href="#work"]').on('click', function(e) {
+			$('#work')[0].scrollIntoView({
+				  behavior: 'smooth'
+			});
+			history.replaceState(null, '', '#work');
+			e.preventDefault();
+		});
+
 		$('a[href="#contact"], .js-contact').on('click', function(e) {
 			$('#contact')[0].scrollIntoView({
 				  behavior: 'smooth'
 			});
+			history.replaceState(null, '', '#contact');
 			e.preventDefault();
 		});
 	},
 
 	init() {
-		this.doContact();
+		this.doNav();
 		this.loadIframe();
 		this.scroll();
 		$(window).on('scroll', this.data.scroll );
