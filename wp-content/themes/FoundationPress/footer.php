@@ -16,11 +16,26 @@
 				<article>
 					<h1>EE</h1>
 					<div class="footer-social">
-						<?php echo do_shortcode( '[addtoany buttons="facebook"]' ); ?>
+						<?php
+							$fb = get_option('facebook');
+							$tw = get_option('twitter');
+							$ig = get_option('instagram');
+						?>
+						<?php if ( $fb ) : ?>
 						<div class="a2a_kit a2a_kit_size_32 a2a_default_style a2a_follow">
-						    <a class="a2a_button_instagram" data-a2a-follow="ericthesmith"></a>
+						    <a class="a2a_button_facebook" data-a2a-follow="<?php echo $fb; ?>"></a>
 						</div>
-						<?php echo do_shortcode( '[addtoany buttons="twitter"]' ); ?>
+						<?php endif; ?>
+						<?php if ( $ig ) : ?>
+						<div class="a2a_kit a2a_kit_size_32 a2a_default_style a2a_follow">
+						    <a class="a2a_button_instagram" data-a2a-follow="<?php echo $ig; ?>"></a>
+						</div>
+						<?php endif; ?>
+						<?php if ( $tw ) : ?>
+						<div class="a2a_kit a2a_kit_size_32 a2a_default_style a2a_follow">
+						    <a class="a2a_button_twitter" data-a2a-follow="<?php echo $tw; ?>"></a>
+						</div>
+						<?php endif; ?>
 					</div>
 				</article>
 				<article>

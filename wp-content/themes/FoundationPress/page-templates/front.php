@@ -353,25 +353,29 @@ wp_reset_postdata();
         <div class="featured-section-content">
             <ul class="tabs" data-tabs id="example-tabs">
 <?php
+$a = 0;
 foreach ($q as $key=>$values) :
 
 ?>
-                <li class="tabs-title">
+
+                <li class="tabs-title <?php if ( $a === 0 ) : echo 'is-active'; endif;?>">
                     <a href="#tabs-panel-<?php echo $key; ?>" class="" aria-selected="true" >
                         <h5><?php echo $key  ?></h5>
                     </a>
                 </li>
 <?php
+$a++;
 endforeach;
 ?>
             </ul>
             <div class="tabs-content" data-tabs-content="example-tabs">
                 <?php
+                $count2 = 0;
                 foreach ($q as $key=>$values) :
-                    $count = 0;
                 ?>
-                <div class="tabs-panel <?php echo $is_active; ?>" id="tabs-panel-<?php echo $key; ?>">
+                <div class="tabs-panel <?php if ( $count2 === 0 ) : echo 'is-active'; endif;?>" id="tabs-panel-<?php echo $key; ?>">
                 <?php
+                    $count = 0;
                     foreach ($values as $value) :
                         if ( $count < 6 ) {
                             // echo $count;
@@ -386,6 +390,7 @@ endforeach;
                 ?>
                 </div>
                 <?php
+                $count2++;
                 endforeach;
                 ?>
             </div>
