@@ -1,5 +1,10 @@
 <?php
 
+// BEGIN iThemes Security - Do not modify or remove this line
+// iThemes Security Config Details: 2
+define( 'DISALLOW_FILE_EDIT', true ); // Disable File Editor - Security > Settings > WordPress Tweaks > File Editor
+// END iThemes Security - Do not modify or remove this line
+
 /**
  * The base configuration for WordPress
  *
@@ -27,10 +32,11 @@ define('DB_NAME', 'eeironworks');
 define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', '**62/song/TIME/radio/76**');
+define('DB_PASSWORD', 'Gilbert1579');
+// define('DB_PASSWORD', '**62/song/TIME/radio/76**');
 
 /** MySQL hostname */
-define('DB_HOST', '34.195.241.173');
+define('DB_HOST', 'localhost');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8mb4');
