@@ -69,6 +69,9 @@ add_filter('admin_init', 'my_general_settings_register_fields');
         register_setting('general', 'site_address', 'esc_attr');
         add_settings_field('site_address', '<label for="site_address">'.__('Site Address' , 'site_address' ).'</label>' , 'site_address_html', 'general');
 
+        register_setting('general', 'site_address_link', 'esc_attr');
+        add_settings_field('site_address_link', '<label for="site_address_link">'.__('Site Address Link' , 'site_address_link' ).'</label>' , 'site_address_link_html', 'general');
+
         register_setting('general', 'site_phone', 'esc_attr');
         add_settings_field('site_phone', '<label for="site_phone">'.__('Site Phone' , 'site_phone' ).'</label>' , 'site_phone_html', 'general');
 
@@ -125,9 +128,15 @@ add_filter('admin_init', 'my_general_settings_register_fields');
         echo '<input type="text" class="long-text" id="site_address" name="site_address" value="' . $site_address . '" />';
     }
 
+    function site_address_link_html()
+    {
+        $site_address_link = get_option( 'site_address_link', '' );
+        echo '<input type="text" class="long-text" id="site_address_link" name="site_address_link" value="' . $site_address_link . '" />';
+    }
+
     function site_phone_html()
     {
-        $site_address = get_option( 'site_phone', '' );
+        $site_phone = get_option( 'site_phone', '' );
         echo '<input type="text" class="long-text" id="site_phone" name="site_phone" value="' . $site_phone . '" />';
     }
 

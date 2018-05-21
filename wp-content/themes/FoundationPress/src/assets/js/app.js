@@ -116,8 +116,17 @@ let Header = {
 		data.scrolled.state = data.$window.scrollTop();
 	},
 
-	init() {
+	doContact() {
+		$('a[href="#contact"], .js-contact').on('click', function(e) {
+			$('#contact')[0].scrollIntoView({
+				  behavior: 'smooth'
+			});
+			e.preventDefault();
+		});
+	},
 
+	init() {
+		this.doContact();
 		this.loadIframe();
 		this.scroll();
 		$(window).on('scroll', this.data.scroll );

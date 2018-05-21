@@ -26,21 +26,23 @@
 				<article>
 					<div>
 						<p>
-							<a href="" target="_blank">
+							<?php
+							$street = get_option( 'site_street' );
+							$map = get_option( 'site_address_link' );
+							if ( $street ) : ?>
+							<a href="<?php echo $map ?>" target="_blank">
 								<?php
-									$street = get_option( 'site_street' );
-									if ( $street ) :
-										echo $street;
+									echo $street;
 								?>
 									<br/>
 								<?php
-									 endif;
 									$add = get_option( 'site_address' );
 									if ( $add ) :
 										echo $add;
 									endif;
 								?>
 							</a>
+							<?php endif;?>
 							<br>
 							<?php
 								$tel = get_option('site_phone' );

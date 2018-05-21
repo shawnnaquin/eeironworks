@@ -12,7 +12,7 @@ get_header(); ?>
 			<p>
 				Welcome to E.E. Ironworks, a blacksmithing shop that specializes in traditional blacksmithing techniques, metal fabrication, and custom installations.
 			</p>
-			<a role="button" class="download large button sites-button" href="#">Contact Us</a>
+			<a role="button" class="js-contact download large button sites-button" href="#contact">Contact</a>
 		</div>
 	</div>
 
@@ -42,6 +42,8 @@ get_header(); ?>
 			<?php do_action( 'foundationpress_page_before_entry_content' ); ?>
 			<div class="entry-content">
 				<?php the_content(); ?>
+                <br/>
+                <a role="button" class="js-contact download large button hollow" href="#contact">Contact</a>
 			</div>
 			<footer>
 				<?php
@@ -60,7 +62,6 @@ get_header(); ?>
 		</div>
 
 	</div>
-
 </section>
 <?php endwhile;?>
 <?php do_action( 'foundationpress_after_content' ); ?>
@@ -151,7 +152,10 @@ get_header(); ?>
 <!-- blog -->
 <section class="featured-sections blog">
     <?php
-        $args = array( 'numberposts' => '3' );
+        $args = array( 
+            'numberposts' => '3',
+            'post_status' => 'publish'
+        );
         $recent_posts = wp_get_recent_posts( $args );
 
         foreach( $recent_posts as $recent ) {
@@ -181,7 +185,7 @@ get_header(); ?>
             </div>
         </article>
     <?php } ?>
-
+    <?php if ( $recent_posts ) : ?>
     <article class="featured-section-article no-image ">
         <div class="featured-section-content">
             <a class="large button sites-button more" href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>" >
@@ -189,7 +193,7 @@ get_header(); ?>
             </a>
         </div>
     </article>
-
+    <?php endif;?>
 </section>
 
 <?php wp_reset_query();  // Restore global post data stomped by the_post(). ?>
@@ -392,7 +396,7 @@ endforeach;
 <section class="featured-sections">
 	<article class="featured-section-article no-image" style="background-image:url('<?php the_post_thumbnail_url(); ?>');">
 
-		<div class="featured-section-content">
+		<div id="contact" class="featured-section-content">
 			<h1>Contact</h1>
 			<div class="section-divider">
 				<hr />

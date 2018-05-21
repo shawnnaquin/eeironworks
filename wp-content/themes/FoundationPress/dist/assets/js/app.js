@@ -11947,8 +11947,16 @@ var Header = {
 	scroll: function scroll() {
 		data.scrolled.state = data.$window.scrollTop();
 	},
+	doContact: function doContact() {
+		(0, _jquery2.default)('a[href="#contact"], .js-contact').on('click', function (e) {
+			(0, _jquery2.default)('#contact')[0].scrollIntoView({
+				behavior: 'smooth'
+			});
+			e.preventDefault();
+		});
+	},
 	init: function init() {
-
+		this.doContact();
 		this.loadIframe();
 		this.scroll();
 		(0, _jquery2.default)(window).on('scroll', this.data.scroll);
