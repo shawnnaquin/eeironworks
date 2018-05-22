@@ -141,6 +141,10 @@ function images() {
 function server(done) {
   browser.init({
     proxy: BROWSERSYNC.url,
+    serveStatic: [{
+        route: '/wp-content/themes/FoundationPress/dist/assets',
+        dir: ['./dist/assets']
+    }],
     https: true
   });
   done();
