@@ -226,13 +226,19 @@
 	}
 	.tagline {
 		@include breakpoint(small) {
-			@include xy-cell(8);
+			@include xy-cell(9);
 		}
 		@include breakpoint(medium) {
-			@include xy-cell(5);
+			@include xy-cell(6);
 		}
 	}
+	img {
+		display:inline;
+		max-width:75px;
+		transform: translateY(-30%);
+	}
 	h1 {
+		display:inline;
 		color: #fff;
 		font-weight: 500;
 		font-family:"Bree Serif";
@@ -246,6 +252,7 @@
 	p {
 		color:white;
 		font-family:"Droid Serif";
+		margin-top:1rem;
 	}
 	h4 {
 		color: #fefefe;
@@ -394,6 +401,15 @@
 		color: $white;
 		border-radius: 8px;
 		border:1px solid $white;
+		a {
+			color: $white;
+			transition: color 150ms ease;
+			text-decoration:underline;
+			font-weight:700;
+			&:hover, &:focus, &:active {
+				color: darken($white, 15%);
+			}
+		}
 	}
 }
 .featured-section-article:nth-child(even) {

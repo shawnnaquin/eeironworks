@@ -32,7 +32,7 @@
 				<span class="site-mobile-title title-bar-title">
 					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 						<!-- <?php//bloginfo( 'name' ); ?> -->
-						EE
+						<img src="<?php echo get_option('site_logo');?>" alt="logo" />
 					</a>
 				</span>
 			</div>
@@ -42,8 +42,8 @@
 			<div class="top-bar-left">
 				<div class="site-desktop-title top-bar-title">
 					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-						<h1>EE</h1>
-						<!-- <img src="<?php //  echo get_template_directory_uri(); ?>/src/assets/images/logo.png" alt="logo"> -->
+						<!-- <h1>EE</h1> -->
+						<img src="<?php echo get_option('site_logo');?>" alt="logo" />
 					</a>
 				</div>
 			</div>
@@ -55,7 +55,7 @@
 				<?php endif; ?>
 			</div>
 		</nav>
-		
+
 	</header>
 
 	<section class="container">

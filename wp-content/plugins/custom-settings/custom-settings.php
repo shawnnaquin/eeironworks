@@ -63,6 +63,14 @@ add_filter('admin_init', 'my_general_settings_register_fields');
 
     function my_general_settings_register_fields()
     {
+        // https://player.vimeo.com/video/218861893
+
+        register_setting('general', 'main_video_link', 'esc_attr');
+        add_settings_field('main_video_link', '<label for="main_video_link">'.__('Main Video Link' , 'main_video_link' ).'</label>' , 'main_video_link_html', 'general');
+
+        register_setting('general', 'intro_copy', 'esc_attr');
+        add_settings_field('intro_copy', '<label for="intro_copy">'.__('Intro Copy' , 'intro_copy' ).'</label>' , 'intro_copy_html', 'general');
+
         register_setting('general', 'site_street', 'esc_attr');
         add_settings_field('site_street', '<label for="site_street">'.__('Site Street' , 'site_street' ).'</label>' , 'site_street_html', 'general');
 
@@ -108,6 +116,18 @@ add_filter('admin_init', 'my_general_settings_register_fields');
         register_setting('general', 'instagram', 'esc_attr');
         add_settings_field('instagram', '<label for=instagram">'.__('Instagram Link<br/>' , 'instagram' ).'</label>' , 'instagram', 'general');
 
+    }
+
+    function main_video_link_html()
+    {
+        $main_video_link = get_option( 'main_video_link', '' );
+        echo '<input type="text" class="long-text" id="main_video_link" name="main_video_link" value="' . $main_video_link . '" />';
+    }
+
+    function intro_copy_html()
+    {
+        $intro_copy = get_option( 'intro_copy', '' );
+        echo '<input type="text" class="long-text" id="intro_copy" name="intro_copy" value="' . $intro_copy . '" />';
     }
 
     function blog_header_html()

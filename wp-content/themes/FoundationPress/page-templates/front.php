@@ -8,9 +8,10 @@ get_header(); ?>
 
 	<div class="marketing">
 		<div class="tagline">
+            <img src="<?php echo get_option('site_logo');?>" alt="logo" />
 			<h1><?php bloginfo( 'name' ); ?></h1>
 			<p>
-				Welcome to E.E. Ironworks, a blacksmithing shop that specializes in traditional blacksmithing techniques, metal fabrication, and custom installations.
+                <?php echo get_option('intro_copy'); ?>
 			</p>
 			<a role="button" class="js-contact download large button sites-button" href="#contact">Contact</a>
 		</div>
@@ -25,7 +26,7 @@ get_header(); ?>
 		  <div class="sk-cube3 sk-cube"></div>
 		</div>
 
-        <div data-vimeo-url="https://player.vimeo.com/video/218861893" id="playertwo"></div>
+        <div data-vimeo-url="<?php echo get_option('main_video_link'); ?>" id="playertwo"></div>
 
 		<!-- <iframe class="iframe js-iframe" src="https://player.vimeo.com/video/218861893?" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> -->
 

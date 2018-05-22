@@ -37,6 +37,9 @@
 
 .title-bar-title {
   float:right;
+  img {
+    max-width:75px;
+  }
   a {
     color:$white;
     font-size:24px;
