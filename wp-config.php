@@ -26,17 +26,17 @@ define( 'DISALLOW_FILE_EDIT', true ); // Disable File Editor - Security > Settin
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'eeironworks');
+define('DB_NAME', 'eeiron');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', 'crsuperman34');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'Gilbert1579');
-// define('DB_PASSWORD', '**62/song/TIME/radio/76**');
+// define('DB_PASSWORD', 'Gilbert1579');
+define('DB_PASSWORD', '**62/song/TIME/radio/76**');
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'mysql.eeiron.com');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8mb4');
