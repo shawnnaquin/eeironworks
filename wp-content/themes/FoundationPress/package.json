@@ -22,7 +22,7 @@
   ],
   "dependencies": {
     "foundation-sites": "6.4.1",
-    "jquery": "~3.0.0",
+    "jquery": "~3.4.0",
     "motion-ui": "~1.2.2",
     "webfontloader": "^1.6.28",
     "what-input": "^4.1.3"
